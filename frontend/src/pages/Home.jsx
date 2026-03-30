@@ -20,15 +20,15 @@ const Home = () => {
   useEffect(() => {
     dispatch(
       fetchProductsByFilters({
-        gender: "Woman",
-        category: "Bottom Wear",
+        gender: "Women",
+        category: "Soins Visage",
         limit: 8,
-      })
+      }),
     );
     const fetchBestSeller = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:9000/api/products/best-seller`
+          `http://localhost:9000/api/products/best-seller`,
         );
         setBestSellerProduct(response.data);
       } catch (error) {
@@ -42,16 +42,19 @@ const Home = () => {
       <Hero />
       <GenderCollection />
       <NewArrivals />
-      {/* Best Seller  */}
-      <h2 className="text-3xl text-center font-bold mb-4 "> Best Seller</h2>
+      {/* Meilleures Ventes  */}
+      <h2 className="text-3xl text-center font-bold mb-4 ">
+        {" "}
+        Meilleures Ventes
+      </h2>
       {bestSellerProduct ? (
         <ProductDetails productId={bestSellerProduct._id} />
       ) : (
-        <p className="text-center">Loading Best Seller Products</p>
+        <p className="text-center">Chargement des meilleures ventes...</p>
       )}
       <div className="container mx-auto">
         <h2 className="text-3xl text-center font-bold mb-4">
-          Top Wears For Woman
+          Soins Visage pour Femmes
         </h2>
         <ProductGrid products={products} loading={loading} error={error} />
       </div>

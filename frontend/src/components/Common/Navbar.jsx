@@ -38,28 +38,16 @@ const Navbar = () => {
 
         <div className="hidden md:flex space-x-6">
           <Link
-            to="/collections/all?gender=Men"
+            to="/collection/all?gender=Men"
             className="text-gray-700 text-sm hover:text-black font-medium uppercase"
           >
-            Men
+            Homme
           </Link>
           <Link
-            to="/collections/all?gender=Women"
+            to="/collection/all?gender=Women"
             className="text-gray-700 text-sm hover:text-black font-medium uppercase"
           >
-            Women
-          </Link>
-          <Link
-            to="/collections/all?category=Top Wear"
-            className="text-gray-700 text-sm hover:text-black font-medium uppercase"
-          >
-            Top Wear
-          </Link>
-          <Link
-            to="/collections/all?category=Bottom Wear"
-            className="text-gray-700 text-sm hover:text-black font-medium uppercase"
-          >
-            Bottom Wear
+            Femme
           </Link>
         </div>
 

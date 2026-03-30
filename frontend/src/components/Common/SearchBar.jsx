@@ -20,7 +20,7 @@ const SearchBar = () => {
     e.preventDefault();
     dispatch(setFilters({ search: searchTerm }));
     dispatch(fetchProductsByFilters({ search: searchTerm }));
-    navigate(`/collections/all?search=${searchTerm}`);
+    navigate(`/collection/all?search=${searchTerm}`);
   };
   return (
     <div

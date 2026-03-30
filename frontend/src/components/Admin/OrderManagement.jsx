@@ -26,19 +26,19 @@ const OrderManagement = () => {
     dispatch(updateOrderStatus({ id: orderID, status }));
   };
 
-  if (loading) return <p>Loading ....</p>;
-  if (error) return <p>Error {error}</p>;
+  if (loading) return <p>Chargement ....</p>;
+  if (error) return <p>Erreur {error}</p>;
   return (
     <div className="max-w-7xl mx-auto p-6">
-      <h2 className="text-2xl font-bold mb-6"> Order Management</h2>
+      <h2 className="text-2xl font-bold mb-6"> Gestion des commandes</h2>
       <div className="overflow-x-auto shadow-md sm:rounded-lg">
         <table className="min-w-full text-left text-gray-500">
           <thead className="bg-gray-100 text-ms uppercase text-gray-700">
             <tr>
-              <th className="py-3 px-4 ">Order Id </th>
-              <th className="py-3 px-4 ">Customer </th>
-              <th className="py-3 px-4 ">Total Price </th>
-              <th className="py-3 px-4 ">Status</th>
+              <th className="py-3 px-4 ">Numéro de commande </th>
+              <th className="py-3 px-4 ">Client </th>
+              <th className="py-3 px-4 ">Prix total </th>
+              <th className="py-3 px-4 ">Statut</th>
               <th className="py-3 px-4 ">Actions</th>
             </tr>
           </thead>
@@ -62,10 +62,10 @@ const OrderManagement = () => {
                       }
                       className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5"
                     >
-                      <option value="Processing">Processing</option>
-                      <option value="Shipped">Shipped</option>
-                      <option value="Delivered">Delivered</option>
-                      <option value="Cancelled">Cancelled</option>
+                      <option value="Processing">En cours de traitement</option>
+                      <option value="Shipped">Livré</option>
+                      <option value="Delivered">Livré</option>
+                      <option value="Cancelled">Annulé</option>
                     </select>
                   </td>
                   <td className="p-4">
@@ -73,7 +73,7 @@ const OrderManagement = () => {
                       onClick={() => handleStatusChange(order._id, "Delivered")}
                       className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
                     >
-                      Mark as Delivered
+                      Marquer comme livré
                     </button>
                   </td>
                 </tr>
@@ -81,7 +81,7 @@ const OrderManagement = () => {
             ) : (
               <tr>
                 <td colSpan={5} className="p-4 text-center text-gray-500 ">
-                  No Orders found.
+                  Aucune commande trouvée.
                 </td>
               </tr>
             )}

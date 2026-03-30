@@ -188,7 +188,12 @@ router.get("/", async (req, res) => {
       query.color = { $in: color.split(",") };
     }
     if (gender) {
-      query.gender = gender;
+      // Include Unisexe products when filtering by Men or Women
+      if (gender === "Men" || gender === "Women") {
+        query.gender = { $in: [gender, "Unisexe"] };
+      } else {
+        query.gender = gender;
+      }
     }
     if (minPrice || maxPrice) {
       query.price = {};

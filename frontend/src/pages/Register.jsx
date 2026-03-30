@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import register from "../assets/register.jpg";
+import register from "../assets/register.png";
 import { registerUser } from "../redux/slices/authSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { mergeCart } from "../redux/slices/cartSlice";
@@ -43,43 +43,43 @@ const Register = () => {
           onSubmit={handleSubmit}
         >
           <div className="flex justify-center mb-6 ">
-            <h2 className="text-xl font-medium">EShop</h2>
+            <h2 className="text-xl font-medium">Thermal Care</h2>
           </div>
-          <h2 className="text-2xl font-bold text-center mb-6">Hey there!</h2>
+          <h2 className="text-2xl font-bold text-center mb-6">Bonjour!</h2>
           <p className="text-center mb-6">
-            Enter your username and password to login
+            Entrez vos informations pour créer un compte
           </p>
           <div className="mb-4">
-            <label className="block text-sm font-semibold mb-2">Name</label>
+            <label className="block text-sm font-semibold mb-2">Nom</label>
             <input
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
               className="w-full p-2 border rounded"
-              placeholder="Enter your name"
+              placeholder="Entrez votre nom"
             />
           </div>
           <div className="mb-4">
-            <label className="block text-sm font-semibold mb-2">Email</label>
+            <label className="block text-sm font-semibold mb-2">E-mail</label>
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="w-full p-2 border rounded"
-              placeholder="Enter your email address"
+              placeholder="Entrez votre adresse e-mail"
             />
           </div>
           <div className="mb-4">
             <label className="block text-sm font-semibold mb-2">
               {" "}
-              Password
+              Mot de passe
             </label>
             <input
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="w-full p-2 border rounded"
-              placeholder="Enter your password"
+              placeholder="Entrez votre mot de passe"
             />
           </div>
           <button
@@ -87,15 +87,15 @@ const Register = () => {
             className="w-full bg-black p-2 text-white rounded-lg font-semibold hover:text-gray-800 transition "
           >
             {" "}
-            Sign Up
+            S'inscrire
           </button>
           <p className="mt-6 text-center text-sm">
-            have an account ?
+            Vous avez déjà un compte ?
             <Link
               to={`/login?redirect=${encodeURIComponent(redirect)}`}
               className="text-blue-500"
             >
-              Login
+              Se connecter
             </Link>
           </p>
         </form>

@@ -46,7 +46,8 @@ const seedData = async () => {
     console.log("Product data seeded successfully");
     process.exit();
   } catch (err) {
-    console.log("error seeding the data");
+    console.log("error seeding the data:", err.message);
+    console.error(err);
     process.exit(1);
   }
 };

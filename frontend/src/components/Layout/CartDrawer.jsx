@@ -31,11 +31,11 @@ const CartDrawer = ({ openDrawer, handleDrawer }) => {
         </button>
       </div>
       <div className="flex-grow p-4 overflow-y-auto">
-        <h2 className="text-xl font-semibold mb-4">Your Cart</h2>
+        <h2 className="text-xl font-semibold mb-4">Votre Panier</h2>
         {cart && cart?.products?.length > 0 ? (
           <CartContents cart={cart} userId={userId} guestId={guestId} />
         ) : (
-          <p>Your Cart is Empty</p>
+          <p>Votre panier est vide</p>
         )}
       </div>
       <div className="p-4 bg-white sticky bottom-0">
@@ -45,11 +45,12 @@ const CartDrawer = ({ openDrawer, handleDrawer }) => {
               onClick={handleCheckout}
               className="w-full bg-black text-white py-3 rounded-lg font-semibold hover:bg-gray-800 transition"
             >
-              Checkout
+              Passer la commande
             </button>
 
             <p className="text-sm tracking-tighter text-gray-500 text-center">
-              Shipping , taxes , and discount codes calculated at checkout
+              Frais de livraison, taxes et codes de réduction calculés lors du
+              paiement
             </p>
           </>
         )}

@@ -15,7 +15,7 @@ const ProductDetails = ({ productId }) => {
   const dispatch = useDispatch();
 
   const { selectedProduct, loading, error, similarProducts } = useSelector(
-    (state) => state.products
+    (state) => state.products,
   );
 
   const { user, guestId } = useSelector((state) => state.auth);
@@ -53,9 +53,12 @@ const ProductDetails = ({ productId }) => {
 
   const handleAddToCart = () => {
     if (!selectedColor || !selectedSize) {
-      toast.error("Please select a size or color before adding to card.", {
-        duration: 1000,
-      });
+      toast.error(
+        "Veuillez sélectionner une taille et une couleur avant d'ajouter au panier.",
+        {
+          duration: 1000,
+        },
+      );
       return;
     }
     setIsButtonDisabled(true);
@@ -68,10 +71,10 @@ const ProductDetails = ({ productId }) => {
         color: selectedColor,
         guestId,
         userId: user?._id,
-      })
+      }),
     ).then(() => {
       toast
-        .success("Product added to Cart!", {
+        .success("Produit ajouté au panier!", {
           duration: 1000,
         })
         .finally(() => {
@@ -80,10 +83,10 @@ const ProductDetails = ({ productId }) => {
     });
   };
   if (loading) {
-    return <p>Loading ....</p>;
+    return <p>Chargement...</p>;
   }
   if (error) {
-    return <p>Error : {error}</p>;
+    return <p>Erreur : {error}</p>;
   }
   return (
     <div className="p-6">
@@ -159,7 +162,7 @@ const ProductDetails = ({ productId }) => {
                 {selectedProduct.description}
               </p>
               <div className="mb-4 ">
-                <p className="text-gray-700 ">Color : </p>
+                <p className="text-gray-700 ">Couleur : </p>
                 <div className="flex gap-2 mt-2">
                   {selectedProduct.colors.map((color) => (
                     <button
@@ -179,7 +182,7 @@ const ProductDetails = ({ productId }) => {
                 </div>
               </div>
               <div className="mb-4">
-                <p className="text-gray-700"> Size: </p>
+                <p className="text-gray-700"> Taille : </p>
                 <div className="flex gap-2 mt-2">
                   {selectedProduct.sizes.map((size) => (
                     <button
@@ -195,7 +198,7 @@ const ProductDetails = ({ productId }) => {
                 </div>
               </div>
               <div className="mb-6">
-                <p className="text-gray-700">Quantity: </p>
+                <p className="text-gray-700">Quantité : </p>
 
                 <div className="flex items-center space-x-4 mt-2">
                   <button
@@ -223,18 +226,18 @@ const ProductDetails = ({ productId }) => {
                 onClick={handleAddToCart}
                 disabled={isButtonDisabled}
               >
-                {isButtonDisabled ? "Adding ...." : "ADD TO CART"}
+                {isButtonDisabled ? "Ajout en cours..." : "AJOUTER AU PANIER"}
               </button>
               <div className="mt-10 text-gray-700">
-                <h3 className="text-xl font-bold mb-4"> Characteristics : </h3>
+                <h3 className="text-xl font-bold mb-4"> Caractéristiques : </h3>
                 <table className="w-full text-left text-sm text-gray-600">
                   <tbody>
                     <tr>
-                      <td className="py-1">Brand</td>
+                      <td className="py-1">Marque</td>
                       <td className="py-1">{selectedProduct.brand}</td>
                     </tr>
                     <tr>
-                      <td className="py-1">Marterial</td>
+                      <td className="py-1">Matière</td>
                       <td className="py-1">{selectedProduct.material}</td>
                     </tr>
                   </tbody>
@@ -244,7 +247,7 @@ const ProductDetails = ({ productId }) => {
           </div>
           <div className="mt-20">
             <h2 className="text-2xl text-center font-medium mb-4">
-              You may Also Like
+              Vous aimerez aussi
             </h2>
             <ProductGrid
               products={similarProducts}

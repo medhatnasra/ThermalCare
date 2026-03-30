@@ -39,7 +39,7 @@ function App() {
             />
 
             <Route
-              path="collections/:collection"
+              path="collection/:collection"
               element={<CollectionPage />}
             />
             <Route path="/product/:id" element={<ProductDetails />} />

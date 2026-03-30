@@ -42,13 +42,13 @@ const Checkout = () => {
           if (!imageUrl) {
             try {
               const response = await axios.get(
-                `http://localhost:9000/api/products/${product.productId}`
+                `http://localhost:9000/api/products/${product.productId}`,
               );
               imageUrl = response.data.images?.[0]?.url || "";
             } catch (fetchError) {
               console.warn(
                 `Failed to fetch image for product ${product.name}:`,
-                fetchError
+                fetchError,
               );
             }
           }
@@ -71,7 +71,7 @@ const Checkout = () => {
         if (missingImages.length > 0) {
           console.error("Some products are missing images:", missingImages);
           alert(
-            "Some products are missing images. Please refresh and try again."
+            "Some products are missing images. Please refresh and try again.",
           );
           return;
         }
@@ -84,7 +84,7 @@ const Checkout = () => {
             shippingAddress,
             paymentMethod: "OnDelivery",
             totalPrice: cart.totalPrice,
-          })
+          }),
         );
         if (res.payload && res.payload._id) {
           setCheckoutId(res.payload._id);
@@ -104,7 +104,7 @@ const Checkout = () => {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("userToken")}`,
           },
-        }
+        },
       );
       if (response.status === 200) {
         await handleFinalizeCheckout(CheckoutId);
@@ -124,7 +124,7 @@ const Checkout = () => {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("userToken")}`,
           },
-        }
+        },
       );
       navigate("/order-confirmation");
     } catch (error) {
@@ -132,20 +132,20 @@ const Checkout = () => {
     }
   };
 
-  if (loading) return <p>Loading cart ...</p>;
-  if (error) return <p> Error : {error}</p>;
+  if (loading) return <p>Chargement du panier...</p>;
+  if (error) return <p> Erreur : {error}</p>;
   if (!cart || !cart.products || cart.products.length === 0)
-    return <p>Your Cart is Empty</p>;
+    return <p>Votre panier est vide</p>;
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-7xl mx-auto py-10 px-6 tracking-tighter">
       {/* Left Section  */}
 
       <div className="bg-white rounded-lg p-6 ">
-        <h2 className="text-2xl uppercase mb-6">Checkout</h2>
+        <h2 className="text-2xl uppercase mb-6">Commande</h2>
         <form onSubmit={handleCreateCheckout}>
-          <h3 className="text-lg mb-4">Contact Details</h3>
+          <h3 className="text-lg mb-4">Coordonnées</h3>
           <div className="mb-4">
-            <label className="block text-gray-700">Email</label>
+            <label className="block text-gray-700">E-mail</label>
             <input
               type="email"
               value={user ? user.email : ""}
@@ -153,10 +153,10 @@ const Checkout = () => {
               disabled
             />
           </div>
-          <h3 className="text-lg mb-4"> Delivery</h3>
+          <h3 className="text-lg mb-4"> Livraison</h3>
           <div className="mb-4 grid grid-cols-2 gap-4">
             <div className="">
-              <label className="block text-gray-700 ">First Name</label>
+              <label className="block text-gray-700 ">Prénom</label>
               <input
                 type="text"
                 className="w-full p-2 border rounded"
@@ -171,7 +171,7 @@ const Checkout = () => {
               />
             </div>
             <div className="">
-              <label className="block text-gray-700 ">Last Name</label>
+              <label className="block text-gray-700 ">Nom</label>
               <input
                 type="text"
                 className="w-full p-2 border rounded"
@@ -207,7 +207,7 @@ const Checkout = () => {
           </div>
           <div className="mb-4 grid grid-cols-2 gap-4 ">
             <div className="">
-              <label className="block text-gray-700 ">City</label>
+              <label className="block text-gray-700 ">Ville</label>
               <input
                 type="text"
                 className="w-full p-2 border rounded"
@@ -222,7 +222,7 @@ const Checkout = () => {
               />
             </div>
             <div className="">
-              <label className="block text-gray-700 ">Postal Code</label>
+              <label className="block text-gray-700 ">Code postal</label>
               <input
                 type="text"
                 className="w-full p-2 border rounded"
@@ -240,7 +240,7 @@ const Checkout = () => {
           <div className="mb-4">
             <label htmlFor="" className="block text-gray-700">
               {" "}
-              Country
+              Pays
             </label>
 
             <input
@@ -259,7 +259,7 @@ const Checkout = () => {
           <div className="mb-4">
             <label htmlFor="" className="block text-gray-700">
               {" "}
-              Phone
+              Téléphone
             </label>
 
             <input
@@ -281,14 +281,14 @@ const Checkout = () => {
                 type="submit"
                 className="w-full bg-black text-white py-3 rounded"
               >
-                Continue to payment
+                Continuer vers le paiement
               </button>
             ) : (
               <button
                 onClick={() => handPaymentSuccess()}
                 className="w-full bg-black text-white py-3 rounded"
               >
-                Continue to payment
+                Continuer vers le paiement
               </button>
             )}
           </div>
@@ -296,7 +296,7 @@ const Checkout = () => {
       </div>
       {/* Right Section  */}
       <div className="bg-gray-50 rounded-lg">
-        <h3 className="text-lg mb-4">Order Summary</h3>
+        <h3 className="text-lg mb-4">Résumé de la commande</h3>
 
         <div className="border-t py-4 mb-4">
           {cart.products.map((product, index) => (
@@ -318,8 +318,11 @@ const Checkout = () => {
                 )}
                 <div className="">
                   <h3 className="text-md"> {product.name}</h3>
-                  <div className="text-gray-500"> Size : {product.size} </div>
-                  <div className="text-gray-500"> Color : {product.color} </div>
+                  <div className="text-gray-500"> Taille : {product.size} </div>
+                  <div className="text-gray-500">
+                    {" "}
+                    Couleur : {product.color}{" "}
+                  </div>
                 </div>
               </div>
               <p className="text-xl">
@@ -330,12 +333,12 @@ const Checkout = () => {
           ))}
         </div>
         <div className="flex justify-between items-center text-lg mb-4">
-          <p>Subtotal</p>
+          <p>Sous-total</p>
           <p>TND{cart.totalPrice?.toLocaleString()}</p>
         </div>
         <div className="flex justify-between items-center text-lg">
-          <p>Shipping</p>
-          <p>Free</p>
+          <p>Livraison</p>
+          <p>Gratuit</p>
         </div>
         <div className="flex justify-between items-center text-lg mt-4 border-t pt-4">
           <p>Total</p>

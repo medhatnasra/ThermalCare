@@ -25,29 +25,30 @@ const OrderConfirmationPage = () => {
   return (
     <div className="max-w-4xl mx-auto bg-white">
       <h1 className="text-4xl font-bold text-center text-emerald-700 mb-8">
-        Thank You For Your Order
+        Merci pour votre commande
       </h1>
       {checkout && (
         <div className="p-6 rounded-lg border">
           <div className="flex justify-between mb-20">
             <div className="">
               <h2 className="text-xl font-semibold">
-                Order Id: {checkout._id}
+                Numéro de commande: {checkout._id}
               </h2>
               <p className="text-gray-500">
-                Order Date: {new Date(checkout.createdAt).toLocaleDateString()}
+                Date de commande:{" "}
+                {new Date(checkout.createdAt).toLocaleDateString()}
               </p>
             </div>
-            {/* Estimated Delivery  */}
+            {/* Livraison estimée  */}
 
             <div className="">
               <p className="text-emerald-700 text-sm">
-                Estimated Delivery:{" "}
+                Livraison estimée:{" "}
                 {calculateEstimatedDelivery(checkout.createdAt)}
               </p>
             </div>
           </div>
-          {/* Ordered Items  */}
+          {/* Articles commandés  */}
           <div className="mb-200">
             {checkout.checkoutItems.map((item) => (
               <div className="flex item-center mb-4 " key={item.productId}>
@@ -70,15 +71,15 @@ const OrderConfirmationPage = () => {
             ))}
           </div>
           <div className="grid grid-cols-2 gap-8">
-            {/* Payment Info  */}
+            {/* Informations de paiement  */}
             <div className="">
-              <h1 className="text-lg font-semibold mb-2">Payment</h1>
-              <div className="text-gray-600">Cash on Delivery</div>
+              <h1 className="text-lg font-semibold mb-2">Paiement</h1>
+              <div className="text-gray-600">Paiement à la livraison</div>
             </div>
-            {/* Delivery Info  */}
+            {/* Informations de livraison  */}
 
             <div className="">
-              <h4 className="text-lg font-semibold mb-2">Delivery</h4>
+              <h4 className="text-lg font-semibold mb-2">Livraison</h4>
               <p className="text-gray-600">
                 {checkout.shippingAddress.address}
               </p>

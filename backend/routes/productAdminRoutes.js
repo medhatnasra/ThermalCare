@@ -52,7 +52,7 @@ router.put("/:id", protect, admin, async (req, res) => {
     const updatedProduct = await Product.findByIdAndUpdate(
       req.params.id,
       req.body,
-      { new: true, runValidators: true }
+      { new: true, runValidators: true },
     );
 
     res.json(updatedProduct);

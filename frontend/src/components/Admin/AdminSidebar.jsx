@@ -26,7 +26,9 @@ const AdminSidebar = () => {
           Thermal Care
         </Link>
       </div>
-      <h2 className="text-xl font-medium mb-6 text-center">Admin Dashboard</h2>
+      <h2 className="text-xl font-medium mb-6 text-center">
+        Tableau de bord administrateur
+      </h2>
       <nav className="" flex flex-col space-y-2>
         <NavLink
           to="/admin/users"
@@ -36,7 +38,7 @@ const AdminSidebar = () => {
               : "text-gray-300 hover:bg-gray-700 text-white py-3 px-4 rounded flex items-center"
           }
         >
-          <FaUser /> <span> Users</span>
+          <FaUser /> <span> Utilisateurs</span>
         </NavLink>
         <NavLink
           to="/admin/products"
@@ -46,7 +48,7 @@ const AdminSidebar = () => {
               : "text-gray-300 hover:bg-gray-700 text-white py-3 px-4 rounded flex items-center"
           }
         >
-          <FaBoxOpen /> <span> Products</span>
+          <FaBoxOpen /> <span> Produits</span>
         </NavLink>
         <NavLink
           to="/"
@@ -56,7 +58,7 @@ const AdminSidebar = () => {
               : "text-gray-300 hover:bg-gray-700 text-white py-3 px-4 rounded flex items-center"
           }
         >
-          <FaStore /> <span> Shop</span>
+          <FaStore /> <span> Boutique</span>
         </NavLink>
         <NavLink
           to="/admin/orders"
@@ -66,7 +68,7 @@ const AdminSidebar = () => {
               : "text-gray-300 hover:bg-gray-700 text-white py-3 px-4 rounded flex items-center"
           }
         >
-          <FaClipboardList /> <span> Orders</span>
+          <FaClipboardList /> <span> Commandes</span>
         </NavLink>
       </nav>
       <div className="mt-6">
@@ -75,7 +77,7 @@ const AdminSidebar = () => {
           className="w-full bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded flex items-center justify-center"
         >
           <FaSignOutAlt />
-          <span>Logout</span>
+          <span>Déconnexion</span>
         </button>
       </div>
     </div>

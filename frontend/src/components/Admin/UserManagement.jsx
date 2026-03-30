@@ -50,22 +50,26 @@ const UserManagement = () => {
   };
 
   const handleDeleteUser = (userId) => {
-    if (window.confirm("Are you sure you want to delete this user ? ")) {
+    if (
+      window.confirm("Êtes-vous sûr de vouloir supprimer cet utilisateur ?")
+    ) {
       dispatch(deleteUser(userId));
     }
   };
   return (
     <div className="max-w-7xl mx-auto p-6">
-      <h2 className="text-2xl font-bold mb-4 ">User Management</h2>
-      {loading && <p> Loading ....</p>}
-      {error && <p> Error : {error} ...</p>}
+      <h2 className="text-2xl font-bold mb-4 ">Gestion des utilisateurs</h2>
+      {loading && <p> Chargement....</p>}
+      {error && <p> Erreur : {error} ...</p>}
 
-      {/* Add New User Form */}
+      {/* Ajouter un nouvel utilisateur */}
       <div className="p-6 rounded-lg mb-6">
-        <h3 className="text-lg font-bold mb-4">Add New User</h3>
+        <h3 className="text-lg font-bold mb-4">
+          Ajouter un nouvel utilisateur
+        </h3>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
-            <label className="block text-gray-700"> Name</label>
+            <label className="block text-gray-700"> Nom</label>
             <input
               type="text"
               name="name"
@@ -76,7 +80,7 @@ const UserManagement = () => {
             />
           </div>
           <div className="mb-4">
-            <label className="block text-gray-700"> Email</label>
+            <label className="block text-gray-700"> E-mail</label>
             <input
               type="text"
               name="email"
@@ -87,7 +91,7 @@ const UserManagement = () => {
             />
           </div>
           <div className="mb-4">
-            <label className="block text-gray-700"> Password</label>
+            <label className="block text-gray-700"> Mot de passe</label>
             <input
               type="password"
               name="password"
@@ -98,14 +102,14 @@ const UserManagement = () => {
             />
           </div>
           <div className="mb-4">
-            <label className="block text-gray-700"> Role</label>
+            <label className="block text-gray-700"> Rôle</label>
             <select
               name="role"
               value={formData.role}
               onChange={handleChange}
               className="w-full p-2 border rounded"
             >
-              <option value="customer">Customer</option>
+              <option value="customer">Client</option>
               <option value="admin">Admin</option>
             </select>
           </div>
@@ -113,18 +117,18 @@ const UserManagement = () => {
             type="submit"
             className="bg-green-500 py-2 px-4 rounded hover:bg-green-600 text-white"
           >
-            Add User
+            Ajouter un utilisateur
           </button>
         </form>
       </div>
-      {/* Users List Management  */}
+      {/* Gestion de la liste des utilisateurs  */}
       <div className="overflow-x-auto shadow-md sm:rounded-lg">
         <table className="min-w-full text-left text-gray-500">
           <thead className="bg-gray-100 text-xs uppercase text-gray-700">
             <tr>
-              <th className="py-3 px-4"> Name</th>
-              <th className="py-3 px-4">Email</th>
-              <th className="py-3 px-4"> Role</th>
+              <th className="py-3 px-4"> Nom</th>
+              <th className="py-3 px-4">E-mail</th>
+              <th className="py-3 px-4"> Rôle</th>
               <th className="py-3 px-4">Action</th>
             </tr>
           </thead>
@@ -144,7 +148,7 @@ const UserManagement = () => {
                       }
                       className="p-2 border rounded"
                     >
-                      <option value="customer">Customer</option>
+                      <option value="customer">Client</option>
                       <option value="admin">Admin</option>
                     </select>
                   </td>
@@ -153,7 +157,7 @@ const UserManagement = () => {
                       onClick={() => handleDeleteUser(user._id)}
                       className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
                     >
-                      Delete
+                      Supprimer
                     </button>
                   </td>
                 </tr>
@@ -161,7 +165,7 @@ const UserManagement = () => {
             ) : (
               <tr>
                 <td colSpan={4} className="p-4 text-center text-gray-400">
-                  No users found
+                  Aucun utilisateur trouvé
                 </td>
               </tr>
             )}
