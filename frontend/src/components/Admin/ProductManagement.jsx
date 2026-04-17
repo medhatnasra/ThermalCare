@@ -22,7 +22,8 @@ const ProductManagement = () => {
     if (!query) return products;
 
     return products.filter((product) => {
-      const key = `${product.name || ""} ${product.sku || ""} ${product.category || ""} ${product.brand || ""}`.toLowerCase();
+      const key =
+        `${product.name || ""} ${product.sku || ""} ${product.category || ""} ${product.brand || ""}`.toLowerCase();
       return key.includes(query);
     });
   }, [products, searchTerm]);
@@ -112,4 +113,3 @@ const ProductManagement = () => {
 };
 
 export default ProductManagement;
-

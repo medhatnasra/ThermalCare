@@ -263,7 +263,6 @@ const PersonnelDiscountPage = () => {
           >
             Rafraichir les donnees
           </button>
-
         </div>
       </div>
 
@@ -404,4 +403,3 @@ const PersonnelDiscountPage = () => {
 };
 
 export default PersonnelDiscountPage;
-

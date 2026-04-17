@@ -13,7 +13,7 @@ const CollectionPage = () => {
   const { products, loading, error } = useSelector((state) => state.products);
   const queryParams = useMemo(
     () => Object.fromEntries(searchParams.entries()),
-    [searchParams]
+    [searchParams],
   );
   const sidbarRef = useRef(null);
   const [isSideBarOpen, setIsSideBarOpen] = useState(false);
