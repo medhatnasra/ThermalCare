@@ -7,6 +7,8 @@ import orderReducer from "./slices/orderSlice";
 import adminReducer from "./slices/adminSlice";
 import adminProductReducer from "./slices/adminProductSlice";
 import adminOrderSlice from "./slices/adminOrderSlice";
+import personnelDiscountReducer from "./slices/personnelDiscountSlice";
+import favoriteReducer from "./slices/favoriteSlice";
 const store = configureStore({
   reducer: {
     auth: authReducer,
@@ -17,6 +19,8 @@ const store = configureStore({
     admin: adminReducer,
     adminProducts: adminProductReducer,
     adminOrders: adminOrderSlice,
+    personnelDiscount: personnelDiscountReducer,
+    favorites: favoriteReducer,
   },
 });
 

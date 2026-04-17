@@ -24,7 +24,7 @@ const TopBar = () => {
           <span>Nous livrons dans le monde entier</span>
         </div>
         <div className="text-sm hidden md:block">
-          <a href="tel:+21653225369">+21653225369</a>
+          <a href="tel:+21653225369">+21699401318</a>
         </div>
       </div>
     </div>

@@ -24,7 +24,7 @@ export const loginUser = createAsyncThunk(
   async (userData, { rejectWithValue }) => {
     try {
       const response = await axios.post(
-        `http://localhost:9000/api/users/login`,
+        `http://localhost:5000/api/users/login`,
         userData
       );
 
@@ -43,7 +43,7 @@ export const registerUser = createAsyncThunk(
   async (userData, { rejectWithValue }) => {
     try {
       const response = await axios.post(
-        `http://localhost:9000/api/users/register`,
+        `http://localhost:5000/api/users/register`,
         userData
       );
 
@@ -105,3 +105,4 @@ const authSlice = createSlice({
 
 export const { logout, generateNewGuestId } = authSlice.actions;
 export default authSlice.reducer;
+

@@ -75,7 +75,7 @@ const MyOrdersPage = () => {
                     {order.orderItems.length}
                   </td>
                   <td className="py-2 px-2 sm:py-4 sm:px-4">
-                    {order.totalPrice} TND
+                    {Number(order.totalPrice || 0).toFixed(1)} TND
                   </td>
                   <td className="py-2 px-2 sm:py-4 sm:px-4">
                     <span

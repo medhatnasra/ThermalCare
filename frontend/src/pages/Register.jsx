@@ -4,15 +4,17 @@ import register from "../assets/register.png";
 import { registerUser } from "../redux/slices/authSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { mergeCart } from "../redux/slices/cartSlice";
+import { toast } from "sonner";
 const Register = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
-  const { user, guestId } = useSelector((state) => state.auth);
+  const { user, guestId, loading } = useSelector((state) => state.auth);
   const { cart } = useSelector((state) => state.cart);
 
   const redirect = new URLSearchParams(location.search).get("redirect") || "/";
@@ -30,10 +32,59 @@ const Register = () => {
     }
   }, [user, guestId, cart, navigate, isCheckoutRedirect, dispatch]);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    dispatch(registerUser({ name, email, password }));
+    const normalizedName = name.trim();
+    const normalizedEmail = email.trim().toLowerCase();
+    const normalizedPassword = password.trim();
+    const normalizedConfirm = confirmPassword.trim();
+
+    if (
+      !normalizedName ||
+      !normalizedEmail ||
+      !normalizedPassword ||
+      !normalizedConfirm
+    ) {
+      toast.error("Veuillez remplir tous les champs obligatoires.");
+      return;
+    }
+
+    if (normalizedName.length < 2) {
+      toast.error("Le nom doit contenir au moins 2 caracteres.");
+      return;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(normalizedEmail)) {
+      toast.error("Veuillez saisir une adresse e-mail valide.");
+      return;
+    }
+
+    if (normalizedPassword.length < 6) {
+      toast.error("Le mot de passe doit contenir au moins 6 caracteres.");
+      return;
+    }
+
+    if (normalizedPassword !== normalizedConfirm) {
+      toast.error("La confirmation du mot de passe ne correspond pas.");
+      return;
+    }
+
+    try {
+      await dispatch(
+        registerUser({
+          name: normalizedName,
+          email: normalizedEmail,
+          password: normalizedPassword,
+        }),
+      ).unwrap();
+      toast.success("Inscription reussie. Bienvenue !");
+    } catch (error) {
+      toast.error(
+        error?.message || "Echec de l'inscription. Veuillez reessayer.",
+      );
+    }
   };
   return (
     <div className="flex">
@@ -82,12 +133,24 @@ const Register = () => {
               placeholder="Entrez votre mot de passe"
             />
           </div>
+          <div className="mb-4">
+            <label className="block text-sm font-semibold mb-2">
+              Confirmer le mot de passe
+            </label>
+            <input
+              type="password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              className="w-full p-2 border rounded"
+              placeholder="Confirmez votre mot de passe"
+            />
+          </div>
           <button
             type="submit"
+            disabled={loading}
             className="w-full bg-black p-2 text-white rounded-lg font-semibold hover:text-gray-800 transition "
           >
-            {" "}
-            S'inscrire
+            {loading ? "Inscription..." : "S'inscrire"}
           </button>
           <p className="mt-6 text-center text-sm">
             Vous avez déjà un compte ?

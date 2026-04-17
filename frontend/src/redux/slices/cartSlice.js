@@ -20,7 +20,7 @@ export const fetchCart = createAsyncThunk(
   "cart/fetchCart",
   async ({ userId, guestId }, { rejectWithValue }) => {
     try {
-      const response = await axios.get(`http://localhost:9000/api/cart`, {
+      const response = await axios.get(`http://localhost:5000/api/cart`, {
         params: { userId, guestId },
       });
       return response.data;
@@ -39,7 +39,7 @@ export const addToCart = createAsyncThunk(
     { rejectWithValue }
   ) => {
     try {
-      const response = await axios.post(`http://localhost:9000/api/cart`, {
+      const response = await axios.post(`http://localhost:5000/api/cart`, {
         productId,
         quantity,
         size,
@@ -63,7 +63,7 @@ export const updateCartItemQuantity = createAsyncThunk(
     { rejectWithValue }
   ) => {
     try {
-      const response = await axios.put(`http://localhost:9000/api/cart`, {
+      const response = await axios.put(`http://localhost:5000/api/cart`, {
         productId,
         quantity,
         guestId,
@@ -87,7 +87,7 @@ export const removeFromCart = createAsyncThunk(
     try {
       const response = await axios({
         method: "DELETE",
-        url: `http://localhost:9000/api/cart`,
+        url: `http://localhost:5000/api/cart`,
         data: { productId, guestId, userId, size, color },
       });
       return response.data;
@@ -104,7 +104,7 @@ export const mergeCart = createAsyncThunk(
   async ({ guestId, userId }, { rejectWithValue }) => {
     try {
       const response = await axios.post(
-        `http://localhost:9000/api/cart/merge`,
+        `http://localhost:5000/api/cart/merge`,
         { guestId, userId },
         {
           headers: {
@@ -207,3 +207,4 @@ const cartSlice = createSlice({
 export const { clearCart } = cartSlice.actions;
 
 export default cartSlice.reducer;
+

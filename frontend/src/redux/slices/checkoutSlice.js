@@ -8,7 +8,7 @@ export const createCheckout = createAsyncThunk(
   async (checkoutdata, { rejectWithValue }) => {
     try {
       const response = await axios.post(
-        `http://localhost:9000/api/checkout`,
+        `http://localhost:5000/api/checkout`,
         checkoutdata,
         {
           headers: {
@@ -49,3 +49,4 @@ const checkoutSlice = createSlice({
 });
 
 export default checkoutSlice.reducer;
+

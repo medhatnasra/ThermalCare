@@ -34,11 +34,11 @@ export const fetchProductsByFilters = createAsyncThunk(
     if (limit) query.append("limit", limit);
 
     const response = await axios.get(
-      `http://localhost:9000/api/products?${query.toString()}`
+      `http://localhost:5000/api/products?${query.toString()}`,
     );
 
     return response.data;
-  }
+  },
 );
 
 // Async thunk to fetch Single Product
@@ -46,11 +46,11 @@ export const fetchProductDetails = createAsyncThunk(
   "products/fetchProductDetails",
   async (id) => {
     const response = await axios.get(
-      `http://localhost:9000/api/products/${id}`
+      `http://localhost:5000/api/products/${id}`,
     );
 
     return response.data;
-  }
+  },
 );
 
 // Async thunk to fetch similar Products
@@ -58,16 +58,16 @@ export const updateProduct = createAsyncThunk(
   "products/updateProduct",
   async ({ id, productData }) => {
     const response = await axios.put(
-      `http://localhost:9000/api/products/${id}`,
+      `http://localhost:5000/api/products/${id}`,
       productData,
       {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("userToken")}`,
         },
-      }
+      },
     );
     return response.data;
-  }
+  },
 );
 
 // Async Thunk to fetch Similar Products
@@ -76,11 +76,11 @@ export const fetchSimilarProducts = createAsyncThunk(
   "products/fetchSimilarProducts",
   async ({ id }) => {
     const response = await axios.get(
-      `http://localhost:9000/api/products/similar/${id}`
+      `http://localhost:5000/api/products/similar/${id}`,
     );
 
     return response.data;
-  }
+  },
 );
 
 const productSlice = createSlice({
@@ -124,6 +124,9 @@ const productSlice = createSlice({
         collection: "",
       };
     },
+    clearSelectedProduct: (state) => {
+      state.selectedProduct = null;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -163,7 +166,7 @@ const productSlice = createSlice({
         state.updateProduct = action.payload;
 
         const index = state.products.findIndex(
-          (product) => product._id === updateProduct._id
+          (product) => product._id === updateProduct._id,
         );
         if (index !== -1) {
           state.products[index] = updateProduct;
@@ -189,5 +192,6 @@ const productSlice = createSlice({
   },
 });
 
-export const { setFilters, clearFilters } = productSlice.actions;
+export const { setFilters, clearFilters, clearSelectedProduct } =
+  productSlice.actions;
 export default productSlice.reducer;

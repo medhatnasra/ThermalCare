@@ -29,7 +29,10 @@ router.get("/", protect, admin, async (req, res) => {
 
 router.post("/", protect, admin, async (req, res) => {
   try {
-    const product = await Product.create(req.body);
+    const product = await Product.create({
+      ...req.body,
+      user: req.user._id,
+    });
     res.status(201).json(product);
   } catch (error) {
     console.error(error.message);

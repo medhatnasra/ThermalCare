@@ -7,7 +7,7 @@ export const fetchAdminProducts = createAsyncThunk(
   "adminProducts/fetchProducts",
   async () => {
     const response = await axios.get(
-      `http://localhost:9000/api/admin/products`,
+      `http://localhost:5000/api/admin/products`,
       {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("userToken")}`,
@@ -22,7 +22,7 @@ export const createProduct = createAsyncThunk(
   "adminProducts/createProduct",
   async (productData) => {
     const response = await axios.post(
-      `http://localhost:9000/api/admin/products`,
+      `http://localhost:5000/api/admin/products`,
       productData,
       {
         headers: {
@@ -40,7 +40,7 @@ export const updateProduct = createAsyncThunk(
   "adminProducts/updateProduct",
   async ({ id, productData }) => {
     const response = await axios.put(
-      `http://localhost:9000/api/admin/products/${id}`,
+      `http://localhost:5000/api/admin/products/${id}`,
       productData,
       {
         headers: {
@@ -56,7 +56,7 @@ export const updateProduct = createAsyncThunk(
 export const deleteProduct = createAsyncThunk(
   "adminProducts/deleteProduct",
   async (id) => {
-    await axios.delete(`http://localhost:9000/api/products/${id}`, {
+    await axios.delete(`http://localhost:5000/api/admin/products/${id}`, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("userToken")}`,
       },
@@ -84,7 +84,7 @@ const adminProductSlice = createSlice({
       })
       .addCase(fetchAdminProducts.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload.message;
+        state.error = action.payload?.message || action.error.message;
       })
       .addCase(createProduct.fulfilled, (state, action) => {
         state.products.push(action.payload);

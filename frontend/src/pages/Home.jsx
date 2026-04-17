@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Hero from "../components/Layout/Hero";
+import PromoProducts from "../components/Products/PromoProducts";
 import GenderCollection from "../components/Products/GenderCollection";
 import NewArrivals from "../components/Products/NewArrivals";
 import ProductDetails from "../components/Products/ProductDetails";
@@ -28,7 +29,7 @@ const Home = () => {
     const fetchBestSeller = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:9000/api/products/best-seller`,
+          `http://localhost:5000/api/products/best-seller`,
         );
         setBestSellerProduct(response.data);
       } catch (error) {
@@ -40,6 +41,7 @@ const Home = () => {
   return (
     <>
       <Hero />
+      <PromoProducts />
       <GenderCollection />
       <NewArrivals />
       {/* Meilleures Ventes  */}

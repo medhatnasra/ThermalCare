@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import {
   HiOutlineUser,
   HiOutlineShoppingBag,
+  HiOutlineHeart,
   HiBars3BottomRight,
 } from "react-icons/hi2";
 import SearchBar from "./SearchBar";
@@ -49,6 +50,24 @@ const Navbar = () => {
           >
             Femme
           </Link>
+          <Link
+            to="/collection/all?category=B%C3%A9b%C3%A9%20%26%20Maman"
+            className="text-gray-700 text-sm hover:text-black font-medium uppercase"
+          >
+            Bebe & Maman
+          </Link>
+          <Link
+            to="/collection/all?gender=Unisexe"
+            className="text-gray-700 text-sm hover:text-black font-medium uppercase"
+          >
+            Unisexe
+          </Link>
+          <Link
+            to="/collection/all?collection=Soins%20Naturels"
+            className="text-gray-700 text-sm hover:text-black font-medium uppercase"
+          >
+            Bio & Naturel
+          </Link>
         </div>
 
         <div className="flex items-center space-x-4">
@@ -60,6 +79,17 @@ const Navbar = () => {
               Admin
             </Link>
           )}
+          {user && (user.role === "personnel" || user.role === "admin") && (
+            <Link
+              to="/personnel"
+              className="block bg-cyan-700 px-2 rounded text-sm text-white"
+            >
+              Personnel
+            </Link>
+          )}
+          <Link to="/my-favorites">
+            <HiOutlineHeart className="h-6 w-6 text-gray-700" />
+          </Link>
           <Link to="/profile">
             <HiOutlineUser className="h-6 w-6 text-gray-700" />
           </Link>
@@ -97,32 +127,39 @@ const Navbar = () => {
           <h2 className="text-xl font-semibold mb-4">Menu</h2>
           <nav className="space-y-4">
             <Link
-              to="#"
+              to="/collection/all?gender=Men"
               onClick={handleNavDrawer}
               className="block text-gray-600 hover:text-black"
             >
-              Men
+              Homme
             </Link>
             <Link
-              to="#"
+              to="/collection/all?gender=Women"
               onClick={handleNavDrawer}
               className="block text-gray-600 hover:text-black"
             >
-              Woman
+              Femme
             </Link>
             <Link
-              to="#"
+              to="/collection/all?category=B%C3%A9b%C3%A9%20%26%20Maman"
               onClick={handleNavDrawer}
               className="block text-gray-600 hover:text-black"
             >
-              Top Wear
+              Bebe & Maman
             </Link>
             <Link
-              to="#"
+              to="/collection/all?gender=Unisexe"
               onClick={handleNavDrawer}
               className="block text-gray-600 hover:text-black"
             >
-              Bottom Wear
+              Unisexe
+            </Link>
+            <Link
+              to="/collection/all?collection=Soins%20Naturels"
+              onClick={handleNavDrawer}
+              className="block text-gray-600 hover:text-black"
+            >
+              Bio & Naturel
             </Link>
           </nav>
         </div>

@@ -38,22 +38,34 @@ const Footer = () => {
           <h3 className="text-lg text-gray-800 mb-4"> Boutique</h3>
           <ul className="space-y-2 text-gray-600">
             <li>
-              <Link to="#" className="hover:text-gray-600 transition-colors">
+              <Link
+                to="/collection/all?category=Soins%20Visage"
+                className="hover:text-black transition-colors"
+              >
                 Soins Visage
               </Link>
             </li>
             <li>
-              <Link to="#" className="hover:text-gray-600 transition-colors">
+              <Link
+                to="/collection/all?category=Soins%20Corps"
+                className="hover:text-black transition-colors"
+              >
                 Soins Corps
               </Link>
             </li>
             <li>
-              <Link to="#" className="hover:text-gray-600 transition-colors">
+              <Link
+                to="/collection/all?category=Soins%20Cheveux"
+                className="hover:text-black transition-colors"
+              >
                 Suppléments
               </Link>
             </li>
             <li>
-              <Link to="#" className="hover:text-gray-600 transition-colors">
+              <Link
+                to="/collection/all?collection=Soins%20Naturels"
+                className="hover:text-black transition-colors"
+              >
                 Bien-être
               </Link>
             </li>
@@ -63,22 +75,31 @@ const Footer = () => {
           <h3 className="text-lg text-gray-800 mb-4"> Assistance</h3>
           <ul className="space-y-2 text-gray-600">
             <li>
-              <Link to="#" className="hover:text-gray-600 transition-colors">
+              <Link
+                to="/nous-contacter"
+                className="hover:text-black transition-colors"
+              >
                 Nous Contacter
               </Link>
             </li>
             <li>
-              <Link to="#" className="hover:text-gray-600 transition-colors">
+              <Link
+                to="/a-propos"
+                className="hover:text-black transition-colors"
+              >
                 À Propos de Nous{" "}
               </Link>
             </li>
             <li>
-              <Link to="#" className="hover:text-gray-600 transition-colors">
+              <Link to="/faq" className="hover:text-black transition-colors">
                 FAQ{" "}
               </Link>
             </li>
             <li>
-              <Link to="#" className="hover:text-gray-600 transition-colors">
+              <Link
+                to="/fonctionnalites"
+                className="hover:text-black transition-colors"
+              >
                 Fonctionnalités{" "}
               </Link>
             </li>
@@ -116,7 +137,7 @@ const Footer = () => {
           <p className="text-gray-500">Appelez-nous</p>
           <p>
             <FiPhoneCall className="inline-block mr-2" />
-            +21653225369
+            +21699401318
           </p>
         </div>
       </div>

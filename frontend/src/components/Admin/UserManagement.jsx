@@ -62,8 +62,61 @@ const UserManagement = () => {
       {loading && <p> Chargement....</p>}
       {error && <p> Erreur : {error} ...</p>}
 
+      {/* Gestion de la liste des utilisateurs  */}
+      <div className="overflow-x-auto shadow-md sm:rounded-lg">
+        <table className="min-w-full text-left text-gray-500">
+          <thead className="bg-gray-100 text-xs uppercase text-gray-700">
+            <tr>
+              <th className="py-3 px-4"> Nom</th>
+              <th className="py-3 px-4">E-mail</th>
+              <th className="py-3 px-4"> Rôle</th>
+              <th className="py-3 px-4">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {Array.isArray(users) && users.length > 0 ? (
+              users.map((user) => (
+                <tr key={user._id} className="border-b hover:bg-gray-50 ">
+                  <td className="p-4 font-medium text-gray-900 whitespace-nowrap">
+                    {user.name}
+                  </td>
+                  <td className="p-4">{user.email}</td>
+                  <td className="p-4">
+                    <select
+                      value={user.role}
+                      onChange={(e) =>
+                        handleRoleChange(user._id, e.target.value)
+                      }
+                      className="p-2 border rounded"
+                    >
+                      <option value="customer">Client</option>
+                      <option value="personnel">Personnel</option>
+                      <option value="admin">Admin</option>
+                    </select>
+                  </td>
+                  <td className="p-4">
+                    <button
+                      onClick={() => handleDeleteUser(user._id)}
+                      className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
+                    >
+                      Supprimer
+                    </button>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan={4} className="p-4 text-center text-gray-400">
+                  Aucun utilisateur trouvé
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
+
       {/* Ajouter un nouvel utilisateur */}
-      <div className="p-6 rounded-lg mb-6">
+      <div className="p-6 rounded-lg mb-6 mt-6">
         <h3 className="text-lg font-bold mb-4">
           Ajouter un nouvel utilisateur
         </h3>
@@ -110,6 +163,7 @@ const UserManagement = () => {
               className="w-full p-2 border rounded"
             >
               <option value="customer">Client</option>
+              <option value="personnel">Personnel</option>
               <option value="admin">Admin</option>
             </select>
           </div>
@@ -120,57 +174,6 @@ const UserManagement = () => {
             Ajouter un utilisateur
           </button>
         </form>
-      </div>
-      {/* Gestion de la liste des utilisateurs  */}
-      <div className="overflow-x-auto shadow-md sm:rounded-lg">
-        <table className="min-w-full text-left text-gray-500">
-          <thead className="bg-gray-100 text-xs uppercase text-gray-700">
-            <tr>
-              <th className="py-3 px-4"> Nom</th>
-              <th className="py-3 px-4">E-mail</th>
-              <th className="py-3 px-4"> Rôle</th>
-              <th className="py-3 px-4">Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {Array.isArray(users) && users.length > 0 ? (
-              users.map((user) => (
-                <tr key={user._id} className="border-b hover:bg-gray-50 ">
-                  <td className="p-4 font-medium text-gray-900 whitespace-nowrap">
-                    {user.name}
-                  </td>
-                  <td className="p-4">{user.email}</td>
-                  <td className="p-4">
-                    <select
-                      value={user.role}
-                      onChange={(e) =>
-                        handleRoleChange(user._id, e.target.value)
-                      }
-                      className="p-2 border rounded"
-                    >
-                      <option value="customer">Client</option>
-                      <option value="admin">Admin</option>
-                    </select>
-                  </td>
-                  <td className="p-4">
-                    <button
-                      onClick={() => handleDeleteUser(user._id)}
-                      className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
-                    >
-                      Supprimer
-                    </button>
-                  </td>
-                </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan={4} className="p-4 text-center text-gray-400">
-                  Aucun utilisateur trouvé
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
       </div>
     </div>
   );

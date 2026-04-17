@@ -17,7 +17,7 @@ const NewArrivals = () => {
     const fetchNewArrivals = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:9000/api/products/new-arrivals`,
+          `http://localhost:5000/api/products/new-arrivals`,
         );
         setNewArrivals(response.data);
       } catch (error) {
@@ -142,3 +142,4 @@ const NewArrivals = () => {
 };
 
 export default NewArrivals;
+

@@ -42,7 +42,7 @@ const Checkout = () => {
           if (!imageUrl) {
             try {
               const response = await axios.get(
-                `http://localhost:9000/api/products/${product.productId}`,
+                `http://localhost:5000/api/products/${product.productId}`,
               );
               imageUrl = response.data.images?.[0]?.url || "";
             } catch (fetchError) {
@@ -98,7 +98,7 @@ const Checkout = () => {
   const handPaymentSuccess = async () => {
     try {
       const response = await axios.put(
-        `http://localhost:9000/api/checkout/${CheckoutId}/pay`,
+        `http://localhost:5000/api/checkout/${CheckoutId}/pay`,
         { paymentStatus: "paid" },
         {
           headers: {
@@ -118,7 +118,7 @@ const Checkout = () => {
   const handleFinalizeCheckout = async (CheckoutId) => {
     try {
       const response = await axios.post(
-        `http://localhost:9000/api/checkout/${CheckoutId}/finalize`,
+        `http://localhost:5000/api/checkout/${CheckoutId}/finalize`,
         {},
         {
           headers: {
@@ -350,3 +350,4 @@ const Checkout = () => {
 };
 
 export default Checkout;
+

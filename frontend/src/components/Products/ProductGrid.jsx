@@ -1,7 +1,52 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { toast } from "sonner";
+import {
+  clearFavorites,
+  fetchFavorites,
+  toggleFavorite,
+} from "../../redux/slices/favoriteSlice";
+import { FaHeart, FaRegHeart } from "react-icons/fa";
 
 const ProductGrid = ({ products, loading, error }) => {
+  const dispatch = useDispatch();
+  const { user } = useSelector((state) => state.auth);
+  const { items: favorites, loading: favoriteLoading } = useSelector(
+    (state) => state.favorites,
+  );
+
+  useEffect(() => {
+    if (user) {
+      dispatch(fetchFavorites());
+    } else {
+      dispatch(clearFavorites());
+    }
+  }, [dispatch, user]);
+
+  const handleFavoriteClick = async (event, productId) => {
+    event.preventDefault();
+    event.stopPropagation();
+
+    if (!user) {
+      toast.error("Veuillez vous connecter pour ajouter aux favoris.");
+      return;
+    }
+
+    try {
+      const response = await dispatch(toggleFavorite(productId)).unwrap();
+      toast.success(
+        response.isFavorite
+          ? "Produit ajoute aux favoris"
+          : "Produit retire des favoris",
+      );
+    } catch (favError) {
+      toast.error(
+        favError?.message || "Impossible de mettre a jour les favoris.",
+      );
+    }
+  };
+
   if (loading) {
     return <p>Loading ...</p>;
   }
@@ -14,10 +59,26 @@ const ProductGrid = ({ products, loading, error }) => {
       {products.map((prod, index) => {
         const key = prod._id || index;
         const href = prod._id ? `/product/${prod._id}` : "#";
+        const isFavorite = favorites.some(
+          (item) => item._id?.toString() === prod._id?.toString(),
+        );
 
         return (
           <Link key={key} to={href} className="block">
-            <div className="bg-white p-4 rounded-lg">
+            <div className="bg-white p-4 rounded-lg relative">
+              {prod._id && (
+                <button
+                  onClick={(event) => handleFavoriteClick(event, prod._id)}
+                  disabled={favoriteLoading}
+                  className="absolute top-6 right-6 z-10 rounded-full bg-white/90 p-2 shadow hover:bg-white"
+                >
+                  {isFavorite ? (
+                    <FaHeart className="text-rose-600" />
+                  ) : (
+                    <FaRegHeart className="text-gray-700" />
+                  )}
+                </button>
+              )}
               <div className="w-full h-96 mb-4">
                 <img
                   src={prod.images?.[0]?.url}

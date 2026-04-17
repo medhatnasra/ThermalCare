@@ -9,6 +9,11 @@ import {
   fetchSimilarProducts,
 } from "../../redux/slices/productSlice";
 import { addToCart } from "../../redux/slices/cartSlice";
+import {
+  clearFavorites,
+  fetchFavorites,
+  toggleFavorite,
+} from "../../redux/slices/favoriteSlice";
 
 const ProductDetails = ({ productId }) => {
   const { id } = useParams();
@@ -19,6 +24,9 @@ const ProductDetails = ({ productId }) => {
   );
 
   const { user, guestId } = useSelector((state) => state.auth);
+  const { items: favorites, loading: favoriteLoading } = useSelector(
+    (state) => state.favorites,
+  );
   const [mainImage, setMainImage] = useState(null);
   const [selectedSize, setSelectedSize] = useState("");
   const [selectedColor, setSelectedColor] = useState("");
@@ -51,7 +59,39 @@ const ProductDetails = ({ productId }) => {
     }
   }, [dispatch, productFetchId]);
 
-  const handleAddToCart = () => {
+  useEffect(() => {
+    if (user) {
+      dispatch(fetchFavorites());
+    } else {
+      dispatch(clearFavorites());
+    }
+  }, [dispatch, user]);
+
+  const isFavorite = favorites.some(
+    (item) => item._id?.toString() === productFetchId?.toString(),
+  );
+
+  const handleToggleFavorite = async () => {
+    if (!user) {
+      toast.error("Veuillez vous connecter pour ajouter aux favoris.");
+      return;
+    }
+
+    try {
+      const response = await dispatch(toggleFavorite(productFetchId)).unwrap();
+      toast.success(
+        response.isFavorite
+          ? "Produit ajoute aux favoris"
+          : "Produit retire des favoris",
+      );
+    } catch (favError) {
+      toast.error(
+        favError?.message || "Impossible de mettre a jour les favoris.",
+      );
+    }
+  };
+
+  const handleAddToCart = async () => {
     if (!selectedColor || !selectedSize) {
       toast.error(
         "Veuillez sélectionner une taille et une couleur avant d'ajouter au panier.",
@@ -63,24 +103,31 @@ const ProductDetails = ({ productId }) => {
     }
     setIsButtonDisabled(true);
 
-    dispatch(
-      addToCart({
-        productId: productFetchId,
-        quantity,
-        size: selectedSize,
-        color: selectedColor,
-        guestId,
-        userId: user?._id,
-      }),
-    ).then(() => {
-      toast
-        .success("Produit ajouté au panier!", {
+    try {
+      await dispatch(
+        addToCart({
+          productId: productFetchId,
+          quantity,
+          size: selectedSize,
+          color: selectedColor,
+          guestId,
+          userId: user?._id,
+        }),
+      ).unwrap();
+
+      toast.success("Produit ajouté au panier!", {
+        duration: 1000,
+      });
+    } catch (error) {
+      toast.error(
+        error?.message || "Impossible d'ajouter le produit au panier.",
+        {
           duration: 1000,
-        })
-        .finally(() => {
-          setIsButtonDisabled(false);
-        });
-    });
+        },
+      );
+    } finally {
+      setIsButtonDisabled(false);
+    }
   };
   if (loading) {
     return <p>Chargement...</p>;
@@ -227,6 +274,21 @@ const ProductDetails = ({ productId }) => {
                 disabled={isButtonDisabled}
               >
                 {isButtonDisabled ? "Ajout en cours..." : "AJOUTER AU PANIER"}
+              </button>
+              <button
+                onClick={handleToggleFavorite}
+                disabled={favoriteLoading}
+                className={`w-full border py-2 px-6 rounded mb-4 font-medium ${
+                  isFavorite
+                    ? "border-rose-600 text-rose-600"
+                    : "border-gray-300 text-gray-700"
+                } ${favoriteLoading ? "opacity-60 cursor-not-allowed" : "hover:bg-gray-50"}`}
+              >
+                {favoriteLoading
+                  ? "Mise a jour des favoris..."
+                  : isFavorite
+                    ? "Retirer des favoris"
+                    : "Ajouter aux favoris"}
               </button>
               <div className="mt-10 text-gray-700">
                 <h3 className="text-xl font-bold mb-4"> Caractéristiques : </h3>

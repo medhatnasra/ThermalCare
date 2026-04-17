@@ -4,7 +4,7 @@ import axios from "axios";
 // fetch all users (admin Only)
 
 export const fetchUsers = createAsyncThunk("admin/fetchUsers", async () => {
-  const response = await axios.get(`http://localhost:9000/api/admin/users`, {
+  const response = await axios.get(`http://localhost:5000/api/admin/users`, {
     headers: {
       Authorization: `Bearer ${localStorage.getItem("userToken")}`,
     },
@@ -19,7 +19,7 @@ export const addUser = createAsyncThunk(
   async (userData, { rejectWithValue }) => {
     try {
       const response = await axios.post(
-        `http://localhost:9000/api/admin/users`,
+        `http://localhost:5000/api/admin/users`,
         userData,
         {
           headers: {
@@ -40,7 +40,7 @@ export const updateUser = createAsyncThunk(
   async ({ id, name, email, role }, { rejectWithValue }) => {
     try {
       const response = await axios.put(
-        `http://localhost:9000/api/admin/users/${id}`,
+        `http://localhost:5000/api/admin/users/${id}`,
         { name, email, role },
         {
           headers: {
@@ -61,7 +61,7 @@ export const deleteUser = createAsyncThunk(
   async (id, { rejectWithValue }) => {
     try {
       const response = await axios.delete(
-        `http://localhost:9000/api/admin/users/${id}`,
+        `http://localhost:5000/api/admin/users/${id}`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("userToken")}`,
@@ -142,3 +142,4 @@ const adminSlice = createSlice({
 });
 
 export default adminSlice.reducer;
+

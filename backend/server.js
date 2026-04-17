@@ -13,6 +13,8 @@ const SubscribeRoutes = require("./routes/SubscribeRoutes");
 const adminRoutes = require("./routes/adminRoutes");
 const productAdminRoutes = require("./routes/productAdminRoutes");
 const orderAdminRoutes = require("./routes/adminOrderRoutes");
+const discountRoutes = require("./routes/discountRoutes");
+const favoriteRoutes = require("./routes/favoriteRoutes");
 
 app.use(express.json());
 
@@ -37,6 +39,8 @@ app.use("/api/checkout", checkoutRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/upload", uploadRoutes);
 app.use("/api/", SubscribeRoutes);
+app.use("/api/discounts", discountRoutes);
+app.use("/api/favorites", favoriteRoutes);
 
 // Admin Routes
 app.use("/api/admin", adminRoutes);

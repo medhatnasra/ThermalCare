@@ -5,6 +5,7 @@ import login from "../assets/login.jpg";
 import { loginUser } from "../redux/slices/authSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { mergeCart } from "../redux/slices/cartSlice";
+import { toast } from "sonner";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -12,24 +13,60 @@ const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
-  const { user, guestId } = useSelector((state) => state.auth);
+  const { user, guestId, loading } = useSelector((state) => state.auth);
   const { cart } = useSelector((state) => state.cart);
 
   const redirect = new URLSearchParams(location.search).get("redirect") || "/";
   const isCheckoutRedirect = redirect.includes("checkout");
-  const handleSubmit = (e) => {
+
+  const getDashboardRouteByRole = (role) => {
+    if (role === "admin") return "/admin";
+    if (role === "personnel") return "/personnel";
+    return "/";
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    dispatch(loginUser({ email, password }));
+
+    const normalizedEmail = email.trim().toLowerCase();
+
+    if (!normalizedEmail || !password.trim()) {
+      toast.error("Veuillez remplir tous les champs obligatoires.");
+      return;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(normalizedEmail)) {
+      toast.error("Veuillez saisir une adresse e-mail valide.");
+      return;
+    }
+
+    if (password.trim().length < 6) {
+      toast.error("Le mot de passe doit contenir au moins 6 caracteres.");
+      return;
+    }
+
+    try {
+      await dispatch(
+        loginUser({ email: normalizedEmail, password: password.trim() }),
+      ).unwrap();
+      toast.success("Connexion reussie.");
+    } catch (error) {
+      toast.error(
+        error?.message || "Echec de la connexion. Veuillez reessayer.",
+      );
+    }
   };
 
   useEffect(() => {
     if (user) {
+      const roleHome = getDashboardRouteByRole(user.role);
       if (cart?.products.length > 0 && guestId) {
         dispatch(mergeCart({ guestId, user })).then(() => {
-          navigate(isCheckoutRedirect ? "/checkout" : "/");
+          navigate(isCheckoutRedirect ? "/checkout" : roleHome);
         });
       } else {
-        navigate(isCheckoutRedirect ? "/checkout" : "/");
+        navigate(isCheckoutRedirect ? "/checkout" : roleHome);
       }
     }
   }, [user, guestId, cart, navigate, isCheckoutRedirect, dispatch]);
@@ -72,10 +109,10 @@ const Login = () => {
           </div>
           <button
             type="submit"
+            disabled={loading}
             className="w-full bg-black p-2 text-white rounded-lg font-semibold hover:text-gray-800 transition "
           >
-            {" "}
-            Se connecter
+            {loading ? "Connexion..." : "Se connecter"}
           </button>
           <p className="mt-6 text-center text-sm">
             Vous n'avez pas de compte ?

@@ -13,23 +13,25 @@ const OrderDetailsPage = () => {
     dispatch(fetchOrderDetails(id));
   }, [dispatch, id]);
 
-  if (loading) return <p> Loading ...</p>;
-  if (error) return <p> Error {error}</p>;
+  if (loading) return <p>Chargement...</p>;
+  if (error) return <p>Erreur : {error}</p>;
 
   return (
     <div className="max-w-7xl mx-auto p-4 sm:p-6">
-      <h2 className="text-2xl md:text-3xl font-bold mb-6">Order Details</h2>
+      <h2 className="text-2xl md:text-3xl font-bold mb-6">
+        Details de la commande
+      </h2>
       {!orderDetails ? (
-        <p>No Order Details Found</p>
+        <p>Aucun detail de commande trouve</p>
       ) : (
         <div className="p-4 sm:p-6 rounded-lg border">
           <div className="flex flx-col sm:flex-row justify-between mb-8">
             <div className="">
               <h3 className="text-lg md:text-xl font-semibold">
-                Order ID : #{orderDetails._id}
+                ID commande : #{orderDetails._id}
               </h3>
               <p className="text-gray-300">
-                {new Date(orderDetails.createdAt).toLocaleDateString()}
+                {new Date(orderDetails.createdAt).toLocaleDateString("fr-FR")}
               </p>
             </div>
             <div className=" flex flex-col items-start sm:items-end mt-4 sm:mt-0">
@@ -40,7 +42,7 @@ const OrderDetailsPage = () => {
                     : "bg-red-100 text-red-700"
                 }px-3 py-1 rounded-full text-sm font-medium mb-2`}
               >
-                {orderDetails.isPaid ? "Approved" : "Pending"}
+                {orderDetails.isPaid ? "Approuve" : "En attente"}
               </span>
               <span
                 className={`${
@@ -49,38 +51,41 @@ const OrderDetailsPage = () => {
                     : "bg-yellow-100 text-yellow-700"
                 }px-3 py-1 rounded-full text-sm font-medium mb-2`}
               >
-                {orderDetails.isDelivered ? "Delivered" : "Pending"}
+                {orderDetails.isDelivered ? "Livre" : "En attente"}
               </span>
             </div>
           </div>
           {/* Customer, Payment, Shipping Info  */}
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 mb-8 ">
             <div className="">
-              <h4 className="text-lg font-semibold mb-2 ">Payment Info</h4>
-              <p className="">Payment Method: {orderDetails.paymentMethod} </p>
-              <p> Status : {orderDetails.isPaid ? "Paid" : "UnPaid"}</p>
+              <h4 className="text-lg font-semibold mb-2 ">
+                Informations de paiement
+              </h4>
+              <p className="">Methode : {orderDetails.paymentMethod} </p>
+              <p>Statut : {orderDetails.isPaid ? "Paye" : "Non paye"}</p>
             </div>
             <div className="">
-              <h4 className="text-lg font-semibold mb-2 ">Shipping Info</h4>
+              <h4 className="text-lg font-semibold mb-2 ">
+                Informations de livraison
+              </h4>
               <p className="">
-                Shipping Method: {orderDetails.shippingMethod}{" "}
+                Methode de livraison : {orderDetails.shippingMethod}{" "}
               </p>
               <p>
-                {" "}
-                Address :{" "}
+                Adresse :{" "}
                 {`${orderDetails.shippingAddress.city}, ${orderDetails.shippingAddress.country}`}{" "}
               </p>
             </div>
           </div>
           {/* Product List  */}
           <div className="overflow-x-auto ">
-            <h4 className="text-lg font-semibold mb-4">Products</h4>
+            <h4 className="text-lg font-semibold mb-4">Produits</h4>
             <table className="min-w-full text-gray-400 mb-4">
               <thead className="bg-ray-100">
                 <tr>
-                  <th className="py-2 px-4">Name </th>
-                  <th className="py-2 px-4">Unit Price </th>
-                  <th className="py-2 px-4">Quantity </th>
+                  <th className="py-2 px-4">Nom </th>
+                  <th className="py-2 px-4">Prix unitaire </th>
+                  <th className="py-2 px-4">Quantite </th>
                   <th className="py-2 px-4"> Total </th>
                 </tr>
               </thead>
@@ -104,7 +109,7 @@ const OrderDetailsPage = () => {
                       <td className="py-2 px-4 ">${items.price}</td>
                       <td className="py-2 px-4 ">{items.quantity}</td>
                       <td className="py-2 px-4 ">
-                        ${items.price * items.quantity}
+                        TND{items.price * items.quantity}
                       </td>
                     </tr>
                   );
@@ -113,7 +118,7 @@ const OrderDetailsPage = () => {
             </table>
           </div>
           <Link to="/my-orders" className="text-blue-500 hover:underline">
-            Back to My Orders
+            Retour a mes commandes
           </Link>
         </div>
       )}

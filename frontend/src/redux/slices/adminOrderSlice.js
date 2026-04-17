@@ -7,7 +7,7 @@ export const fetchAllOrders = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const response = await axios.get(
-        `http://localhost:9000/api/admin/orders`,
+        `http://localhost:5000/api/admin/orders`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("userToken")}`,
@@ -27,7 +27,7 @@ export const updateOrderStatus = createAsyncThunk(
   async ({ id, status }, { rejectWithValue }) => {
     try {
       const response = await axios.put(
-        `http://localhost:9000/api/admin/orders/${id}`,
+        `http://localhost:5000/api/admin/orders/${id}`,
         { status },
         {
           headers: {
@@ -48,7 +48,7 @@ export const deleteOrder = createAsyncThunk(
   async (id, { rejectWithValue }) => {
     try {
       await axios.delete(
-        `http://localhost:9000/api/admin/orders/${id}`,
+        `http://localhost:5000/api/admin/orders/${id}`,
 
         {
           headers: {
@@ -115,3 +115,4 @@ const adminOrderSlice = createSlice({
 });
 
 export default adminOrderSlice.reducer;
+
