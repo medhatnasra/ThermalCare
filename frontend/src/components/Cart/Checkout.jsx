@@ -327,14 +327,14 @@ const Checkout = () => {
               </div>
               <p className="text-xl">
                 {" "}
-                TND{Number(product.price)?.toLocaleString()}
+                DT{Number(product.price)?.toLocaleString()}
               </p>
             </div>
           ))}
         </div>
         <div className="flex justify-between items-center text-lg mb-4">
           <p>Sous-total</p>
-          <p>TND{cart.totalPrice?.toLocaleString()}</p>
+          <p>DT{cart.totalPrice?.toLocaleString()}</p>
         </div>
         <div className="flex justify-between items-center text-lg">
           <p>Livraison</p>
@@ -342,7 +342,7 @@ const Checkout = () => {
         </div>
         <div className="flex justify-between items-center text-lg mt-4 border-t pt-4">
           <p>Total</p>
-          <p>TND{cart.totalPrice?.toLocaleString()}</p>
+          <p>DT{cart.totalPrice?.toLocaleString()}</p>
         </div>
       </div>
     </div>
@@ -350,4 +350,5 @@ const Checkout = () => {
 };
 
 export default Checkout;
+
 

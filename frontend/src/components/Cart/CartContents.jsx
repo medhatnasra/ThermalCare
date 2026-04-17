@@ -20,7 +20,7 @@ const CartContents = ({ cart, userId, guestId }) => {
           userId,
           size,
           color,
-        })
+        }),
       );
     }
   };
@@ -63,7 +63,7 @@ const CartContents = ({ cart, userId, guestId }) => {
                         -1,
                         product.quantity,
                         product.size,
-                        product.color
+                        product.color,
                       )
                     }
                     className="border rounded px-2 py-1 text-xl font-medium"
@@ -78,7 +78,7 @@ const CartContents = ({ cart, userId, guestId }) => {
                         1,
                         product.quantity,
                         product.size,
-                        product.color
+                        product.color,
                       )
                     }
                     className="border rounded px-2 py-1 text-xl font-medium"
@@ -87,13 +87,13 @@ const CartContents = ({ cart, userId, guestId }) => {
                   </button>
                 </div>
               </div>
-              <p>$ {product.price.toLocaleString()}</p>
+              <p>DT {product.price.toLocaleString()}</p>
               <button
                 onClick={() =>
                   handleRemoveFromCart(
                     product.productId,
                     product.size,
-                    product.color
+                    product.color,
                   )
                 }
               >

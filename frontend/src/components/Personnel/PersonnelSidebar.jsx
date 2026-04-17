@@ -1,5 +1,11 @@
 import React from "react";
-import { FaPercent, FaSignOutAlt, FaStore } from "react-icons/fa";
+import {
+  FaBoxOpen,
+  FaClipboardList,
+  FaPercent,
+  FaSignOutAlt,
+  FaStore,
+} from "react-icons/fa";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { logout } from "../../redux/slices/authSlice";
@@ -23,7 +29,11 @@ const PersonnelSidebar = () => {
         </Link>
       </div>
 
-      <h2 className="text-xl font-medium mb-6 text-center">Espace personnel</h2>
+      <div className="mb-6 text-center">
+        <Link to="/personnel" className="text-xl font-medium hover:underline">
+          Espace personnel
+        </Link>
+      </div>
 
       <nav className="flex flex-col space-y-2">
         <NavLink
@@ -36,6 +46,30 @@ const PersonnelSidebar = () => {
         >
           <FaPercent />
           <span>Gestion des reductions</span>
+        </NavLink>
+
+        <NavLink
+          to="/personnel/products"
+          className={({ isActive }) =>
+            isActive
+              ? "bg-gray-700 text-white py-3 px-4 rounded flex items-center gap-2"
+              : "text-gray-300 hover:bg-gray-700 text-white py-3 px-4 rounded flex items-center gap-2"
+          }
+        >
+          <FaBoxOpen />
+          <span>Gestion des produits</span>
+        </NavLink>
+
+        <NavLink
+          to="/personnel/orders"
+          className={({ isActive }) =>
+            isActive
+              ? "bg-gray-700 text-white py-3 px-4 rounded flex items-center gap-2"
+              : "text-gray-300 hover:bg-gray-700 text-white py-3 px-4 rounded flex items-center gap-2"
+          }
+        >
+          <FaClipboardList />
+          <span>Gestion des commandes</span>
         </NavLink>
 
         <NavLink

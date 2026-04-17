@@ -82,6 +82,10 @@ function App() {
           >
             <Route index element={<PersonnelDiscountPage />} />
             <Route path="discounts" element={<PersonnelDiscountPage />} />
+            <Route path="products" element={<ProductManagement />} />
+            <Route path="products/new" element={<EditProductPage />} />
+            <Route path="products/:id/edit" element={<EditProductPage />} />
+            <Route path="orders" element={<OrderManagement />} />
           </Route>
         </Routes>
       </BrowserRouter>

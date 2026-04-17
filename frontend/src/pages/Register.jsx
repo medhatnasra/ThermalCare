@@ -46,12 +46,12 @@ const Register = () => {
       !normalizedPassword ||
       !normalizedConfirm
     ) {
-      toast.error("Veuillez remplir tous les champs obligatoires.");
+      toast.error("Veuillez remplir tous les champs requis.");
       return;
     }
 
     if (normalizedName.length < 2) {
-      toast.error("Le nom doit contenir au moins 2 caracteres.");
+      toast.error("Le nom doit contenir au moins 2 caractères.");
       return;
     }
 
@@ -62,7 +62,7 @@ const Register = () => {
     }
 
     if (normalizedPassword.length < 6) {
-      toast.error("Le mot de passe doit contenir au moins 6 caracteres.");
+      toast.error("Le mot de passe doit contenir au moins 6 caractères.");
       return;
     }
 
@@ -79,10 +79,10 @@ const Register = () => {
           password: normalizedPassword,
         }),
       ).unwrap();
-      toast.success("Inscription reussie. Bienvenue !");
+      toast.success("Inscription réussie. Bienvenue !");
     } catch (error) {
       toast.error(
-        error?.message || "Echec de l'inscription. Veuillez reessayer.",
+        error?.message || "Échec de l'inscription. Veuillez réessayer.",
       );
     }
   };

@@ -1,11 +1,39 @@
 import React from "react";
+import { useState } from "react";
 import { IoLogoInstagram } from "react-icons/io";
 import { RiTwitterXFill } from "react-icons/ri";
 import { TbBrandMeta } from "react-icons/tb";
 import { Link } from "react-router-dom";
 import { FiPhoneCall } from "react-icons/fi";
+import axios from "axios";
+import { toast } from "sonner";
 
 const Footer = () => {
+  const [email, setEmail] = useState("");
+  const [subscribing, setSubscribing] = useState(false);
+
+  const handleSubscribe = async (e) => {
+    e.preventDefault();
+
+    if (!email.trim()) {
+      toast.error("Veuillez entrer votre e-mail.");
+      return;
+    }
+
+    try {
+      setSubscribing(true);
+      await axios.post("http://localhost:5000/api/subscribe", {
+        email: email.trim(),
+      });
+      toast.success("Vous recevrez désormais les actualités produits.");
+      setEmail("");
+    } catch (error) {
+      toast.error(error?.response?.data?.message || "Echec de l'abonnement.");
+    } finally {
+      setSubscribing(false);
+    }
+  };
+
   return (
     <footer className="border-t py-12">
       <div className="container mx-auto grid grid-cols-1 md:grid-cols-4 gap-8 px-4 lg:px-0">
@@ -19,17 +47,21 @@ const Footer = () => {
             Inscrivez-vous et obtenez 10% de réduction sur votre première
             commande.
           </p>
-          <form className="flex" action="">
+          <form className="flex" onSubmit={handleSubscribe}>
             <input
               type="email"
               placeholder="Entrez votre e-mail"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               className="p-3 w-full text-sm border-t border-l border-b border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-gray-500 transition-all"
+              required
             />
             <button
               type="submit"
+              disabled={subscribing}
               className="bg-black text-white px-6 py-3 text-sm rounded-r-md hover:bg-gray-800 transition-all"
             >
-              S'abonner
+              {subscribing ? "Abonnement..." : "S'abonner"}
             </button>
           </form>
         </div>
@@ -110,7 +142,7 @@ const Footer = () => {
           <h3 className="text-lg text-gray-800 mb-4">Suivez-nous</h3>
           <div className="flex items-center space-x-4 mb-6">
             <a
-              href="https://www.facebook.com"
+              href="https://www.facebook.com/capsa.thermal.oasis"
               target="_blank"
               rel="noopener noreferrer "
               className="hover:text-gray-300"
@@ -118,7 +150,7 @@ const Footer = () => {
               <TbBrandMeta className="h-5 w-5" />
             </a>
             <a
-              href="https://www.instagram.com"
+              href="https://www.instagram.com/capsathermaloasis/"
               target="_blank"
               rel="noopener noreferrer "
               className="hover:text-gray-300"

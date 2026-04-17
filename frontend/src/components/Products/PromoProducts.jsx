@@ -105,10 +105,10 @@ const PromoProducts = () => {
                     </h3>
                     <div className="mt-3 flex items-center gap-2">
                       <p className="text-lg font-semibold text-rose-700">
-                        {discountedPrice.toFixed(2)} TND
+                        {discountedPrice.toFixed(2)} DT
                       </p>
                       <p className="text-sm text-slate-500 line-through">
-                        {basePrice.toFixed(2)} TND
+                        {basePrice.toFixed(2)} DT
                       </p>
                     </div>
                   </div>
@@ -123,3 +123,4 @@ const PromoProducts = () => {
 };
 
 export default PromoProducts;
+

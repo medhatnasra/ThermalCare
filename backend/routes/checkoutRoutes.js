@@ -97,6 +97,7 @@ router.post("/:id/finalize", protect, async (req, res) => {
         isDelivered: false,
         paymentStatus: "paid",
         paymentDetails: checkout.paymentDetails,
+        status: "Pending",
       });
       checkout.isFinalized = true;
       checkout.finalizedAt = Date.now();

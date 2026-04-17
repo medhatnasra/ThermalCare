@@ -11,7 +11,7 @@ const GenderCollection = () => {
           <img
             src={womensColloctionImage}
             alt="Collection Femmes"
-            className="w-full h-[700px] object-cover"
+            className="w-full h-175 object-cover"
           />
           <div className="absolute bottom-8 left-8 bg-white p-4">
             <h1 className="text-2xl font-bold text-gray-900 mb-3">
@@ -19,7 +19,7 @@ const GenderCollection = () => {
               Collection Femmes
             </h1>
             <Link
-              to="/collection/all?gender=Women"
+              to="/collection/all?category=Femme"
               className="text-gray-900 underline"
             >
               Acheter maintenant
@@ -30,7 +30,7 @@ const GenderCollection = () => {
           <img
             src={mensCollectionImage}
             alt="Collection Hommes"
-            className="w-full h-[700px] object-cover"
+            className="w-full h-175 object-cover"
           />
           <div className="absolute bottom-8 left-8 bg-white p-4">
             <h1 className="text-2xl font-bold text-gray-900 mb-3">
@@ -38,7 +38,7 @@ const GenderCollection = () => {
               Collection Hommes
             </h1>
             <Link
-              to="/collection/all?gender=Men"
+              to="/collection/all?category=Homme"
               className="text-gray-900 underline"
             >
               Acheter maintenant

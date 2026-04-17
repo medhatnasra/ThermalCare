@@ -26,9 +26,11 @@ const AdminSidebar = () => {
           Thermal Care
         </Link>
       </div>
-      <h2 className="text-xl font-medium mb-6 text-center">
-        Tableau de bord administrateur
-      </h2>
+      <div className="mb-6 text-center">
+        <Link to="/admin" className="text-xl font-medium hover:underline">
+          Tableau de bord administrateur
+        </Link>
+      </div>
       <nav className="" flex flex-col space-y-2>
         <NavLink
           to="/admin/users"

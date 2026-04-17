@@ -21,8 +21,7 @@ const Home = () => {
   useEffect(() => {
     dispatch(
       fetchProductsByFilters({
-        gender: "Women",
-        category: "Soins Visage",
+        category: "Femme",
         limit: 8,
       }),
     );
@@ -55,9 +54,7 @@ const Home = () => {
         <p className="text-center">Chargement des meilleures ventes...</p>
       )}
       <div className="container mx-auto">
-        <h2 className="text-3xl text-center font-bold mb-4">
-          Soins Visage pour Femmes
-        </h2>
+        <h2 className="text-3xl text-center font-bold mb-4">Produits Femme</h2>
         <ProductGrid products={products} loading={loading} error={error} />
       </div>
       <FeaturedCollection />

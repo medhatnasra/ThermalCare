@@ -42,6 +42,14 @@ const PersonnelDiscountPage = () => {
     [products, search],
   );
 
+  const bulkFieldValues = useMemo(() => {
+    const values = products
+      .map((product) => String(product?.[bulkField] || "").trim())
+      .filter((value) => value.length > 0);
+
+    return [...new Set(values)].sort((a, b) => a.localeCompare(b));
+  }, [products, bulkField]);
+
   const categoryChartMax = Math.max(
     ...(summary.byCategory || []).map((item) => item.discounted),
     1,
@@ -92,7 +100,7 @@ const PersonnelDiscountPage = () => {
 
   return (
     <div className="max-w-7xl mx-auto space-y-6">
-      <div className="rounded-2xl border border-slate-200 bg-gradient-to-r from-emerald-900 via-cyan-800 to-slate-800 p-6 text-white shadow-lg">
+      <div className="rounded-2xl border border-slate-200 bg-linear-to-r from-emerald-900 via-cyan-800 to-slate-800 p-6 text-white shadow-lg">
         <p className="text-xs uppercase tracking-[0.25em] text-cyan-200">
           Personnel
         </p>
@@ -139,7 +147,7 @@ const PersonnelDiscountPage = () => {
                 Economies estimees
               </p>
               <p className="text-2xl font-semibold text-amber-900 mt-1">
-                {Number(summary.estimatedSavings || 0).toFixed(2)} TND
+                {Number(summary.estimatedSavings || 0).toFixed(2)} DT
               </p>
             </div>
           </div>
@@ -165,7 +173,7 @@ const PersonnelDiscountPage = () => {
                     </div>
                     <div className="h-2 rounded-full bg-slate-200">
                       <div
-                        className="h-full rounded-full bg-gradient-to-r from-emerald-500 to-cyan-500"
+                        className="h-full rounded-full bg-linear-to-r from-emerald-500 to-cyan-500"
                         style={{
                           width: `${Math.max(8, (item.discounted / categoryChartMax) * 100)}%`,
                         }}
@@ -195,7 +203,10 @@ const PersonnelDiscountPage = () => {
               <select
                 className="w-full rounded-lg border border-slate-300 p-2"
                 value={bulkField}
-                onChange={(e) => setBulkField(e.target.value)}
+                onChange={(e) => {
+                  setBulkField(e.target.value);
+                  setBulkValue("");
+                }}
               >
                 <option value="category">Categorie</option>
                 <option value="brand">Marque</option>
@@ -206,12 +217,23 @@ const PersonnelDiscountPage = () => {
               <label className="block text-sm text-slate-600 mb-1">
                 Valeur
               </label>
-              <input
+              <select
                 value={bulkValue}
                 onChange={(e) => setBulkValue(e.target.value)}
-                placeholder="Ex: Soins Visage"
                 className="w-full rounded-lg border border-slate-300 p-2"
-              />
+                disabled={bulkFieldValues.length === 0}
+              >
+                <option value="">
+                  {bulkFieldValues.length === 0
+                    ? "Aucune valeur disponible"
+                    : "Selectionner une valeur"}
+                </option>
+                {bulkFieldValues.map((value) => (
+                  <option key={value} value={value}>
+                    {value}
+                  </option>
+                ))}
+              </select>
             </div>
             <div>
               <label className="block text-sm text-slate-600 mb-1">
@@ -242,10 +264,6 @@ const PersonnelDiscountPage = () => {
             Rafraichir les donnees
           </button>
 
-          <div className="mt-4 rounded-lg bg-slate-100 p-3 text-sm text-slate-700">
-            CA estime apres remises:{" "}
-            {Number(summary.estimatedRevenue || 0).toFixed(2)} TND
-          </div>
         </div>
       </div>
 
@@ -323,11 +341,11 @@ const PersonnelDiscountPage = () => {
                         {product.category}
                       </td>
                       <td className="px-3 py-3 text-slate-900 font-semibold">
-                        {basePrice.toFixed(2)} TND
+                        {basePrice.toFixed(2)} DT
                       </td>
                       <td className="px-3 py-3 text-emerald-700 font-semibold">
                         {discountedPrice > 0
-                          ? `${discountedPrice.toFixed(2)} TND`
+                          ? `${discountedPrice.toFixed(2)} DT`
                           : "-"}
                       </td>
                       <td className="px-3 py-3">
@@ -386,3 +404,4 @@ const PersonnelDiscountPage = () => {
 };
 
 export default PersonnelDiscountPage;
+

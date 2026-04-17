@@ -18,7 +18,7 @@ const FeatureSection = () => {
             LIVRAISON INTERNATIONALE GRATUITE
           </h4>
           <p className="text-gray-600 text-sm ">
-            Sur toutes les commandes de plus de 100 TND
+            Sur toutes les commandes de plus de 100 DT
           </p>
           {/* Feature 2 */}
         </div>
@@ -44,3 +44,4 @@ const FeatureSection = () => {
 };
 
 export default FeatureSection;
+

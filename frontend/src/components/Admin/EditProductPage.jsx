@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import {
   clearSelectedProduct,
   fetchProductDetails,
@@ -10,6 +10,7 @@ import {
   createProduct,
   updateProduct,
 } from "../../redux/slices/adminProductSlice";
+import { CATEGORY_OPTIONS } from "../../constants/productOptions";
 
 const emptyProductData = {
   name: "",
@@ -31,6 +32,7 @@ const emptyProductData = {
 const EditProductPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const { id } = useParams();
 
@@ -43,6 +45,9 @@ const EditProductPage = () => {
   });
 
   const [uploading, setUploading] = useState(false);
+  const routeBase = location.pathname.startsWith("/personnel")
+    ? "/personnel/products"
+    : "/admin/products";
 
   useEffect(() => {
     if (id) {
@@ -103,7 +108,7 @@ const EditProductPage = () => {
       dispatch(createProduct(productData));
     }
 
-    navigate("/admin/products");
+    navigate(routeBase);
   };
 
   if (loading) return <p>Loading ...</p>;
@@ -190,14 +195,26 @@ const EditProductPage = () => {
 
         <div className="mb-6">
           <label className="block font-semibold mb-2">Categorie</label>
-          <input
-            type="text"
+          <select
             name="category"
             value={productData.category}
             onChange={handleChange}
             className="w-full border border-gray-300 rounded-md p-2"
             required
-          />
+          >
+            <option value="">Selectionner une categorie</option>
+            {CATEGORY_OPTIONS.map((category) => (
+              <option key={category} value={category}>
+                {category}
+              </option>
+            ))}
+            {productData.category &&
+            !CATEGORY_OPTIONS.includes(productData.category) ? (
+              <option value={productData.category}>
+                {productData.category}
+              </option>
+            ) : null}
+          </select>
         </div>
 
         <div className="mb-6">
@@ -232,20 +249,6 @@ const EditProductPage = () => {
             onChange={handleChange}
             className="w-full border border-gray-300 rounded-md p-2"
           />
-        </div>
-
-        <div className="mb-6">
-          <label className="block font-semibold mb-2">Genre</label>
-          <select
-            name="gender"
-            value={productData.gender}
-            onChange={handleChange}
-            className="w-full border border-gray-300 rounded-md p-2"
-          >
-            <option value="Unisexe">Unisexe</option>
-            <option value="Men">Homme</option>
-            <option value="Women">Femme</option>
-          </select>
         </div>
 
         {/* Sizes  */}

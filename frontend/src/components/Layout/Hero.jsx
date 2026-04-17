@@ -102,15 +102,15 @@ const Hero = () => {
                     {Number(activeProduct.discountPrice || 0) > 0 ? (
                       <>
                         <span className="text-lg font-semibold text-rose-300">
-                          {Number(activeProduct.discountPrice).toFixed(2)} TND
+                          {Number(activeProduct.discountPrice).toFixed(2)} DT
                         </span>
                         <span className="text-sm line-through text-slate-300">
-                          {Number(activeProduct.price || 0).toFixed(2)} TND
+                          {Number(activeProduct.price || 0).toFixed(2)} DT
                         </span>
                       </>
                     ) : (
                       <span className="text-lg font-semibold text-cyan-200">
-                        {Number(activeProduct.price || 0).toFixed(2)} TND
+                        {Number(activeProduct.price || 0).toFixed(2)} DT
                       </span>
                     )}
                   </div>
@@ -150,3 +150,4 @@ const Hero = () => {
 };
 
 export default Hero;
+

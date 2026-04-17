@@ -2,7 +2,7 @@ const express = require("express");
 
 const Product = require("../models/Product");
 
-const { protect, admin } = require("../middleware/authMiddleware");
+const { protect, personnel } = require("../middleware/authMiddleware");
 
 const router = express.Router();
 
@@ -10,7 +10,7 @@ const router = express.Router();
 // @desc get all products
 // @Access Private/Admin
 
-router.get("/", protect, admin, async (req, res) => {
+router.get("/", protect, personnel, async (req, res) => {
   try {
     const products = await Product.find({});
     if (!products) {
@@ -27,7 +27,7 @@ router.get("/", protect, admin, async (req, res) => {
 // @desc Create a new product
 // @Access Private/Admin
 
-router.post("/", protect, admin, async (req, res) => {
+router.post("/", protect, personnel, async (req, res) => {
   try {
     const product = await Product.create({
       ...req.body,
@@ -44,7 +44,7 @@ router.post("/", protect, admin, async (req, res) => {
 // @desc Update a product
 // @Access Private/Admin
 
-router.put("/:id", protect, admin, async (req, res) => {
+router.put("/:id", protect, personnel, async (req, res) => {
   try {
     const product = await Product.findById(req.params.id);
 
@@ -69,7 +69,7 @@ router.put("/:id", protect, admin, async (req, res) => {
 // @desc Delete a product
 // @Access Private/Admin
 
-router.delete("/:id", protect, admin, async (req, res) => {
+router.delete("/:id", protect, personnel, async (req, res) => {
   try {
     const product = await Product.findById(req.params.id);
 

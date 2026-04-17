@@ -39,31 +39,31 @@ const Navbar = () => {
 
         <div className="hidden md:flex space-x-6">
           <Link
-            to="/collection/all?gender=Men"
+            to="/collection/all?category=Homme"
             className="text-gray-700 text-sm hover:text-black font-medium uppercase"
           >
             Homme
           </Link>
           <Link
-            to="/collection/all?gender=Women"
+            to="/collection/all?category=Femme"
             className="text-gray-700 text-sm hover:text-black font-medium uppercase"
           >
             Femme
           </Link>
           <Link
-            to="/collection/all?category=B%C3%A9b%C3%A9%20%26%20Maman"
+            to="/collection/all?category=Bebe%20%26%20Maman"
             className="text-gray-700 text-sm hover:text-black font-medium uppercase"
           >
             Bebe & Maman
           </Link>
           <Link
-            to="/collection/all?gender=Unisexe"
+            to="/collection/all?category=Unisexe"
             className="text-gray-700 text-sm hover:text-black font-medium uppercase"
           >
             Unisexe
           </Link>
           <Link
-            to="/collection/all?collection=Soins%20Naturels"
+            to="/collection/all?category=Bio%20%26%20Naturel"
             className="text-gray-700 text-sm hover:text-black font-medium uppercase"
           >
             Bio & Naturel
@@ -127,35 +127,35 @@ const Navbar = () => {
           <h2 className="text-xl font-semibold mb-4">Menu</h2>
           <nav className="space-y-4">
             <Link
-              to="/collection/all?gender=Men"
+              to="/collection/all?category=Homme"
               onClick={handleNavDrawer}
               className="block text-gray-600 hover:text-black"
             >
               Homme
             </Link>
             <Link
-              to="/collection/all?gender=Women"
+              to="/collection/all?category=Femme"
               onClick={handleNavDrawer}
               className="block text-gray-600 hover:text-black"
             >
               Femme
             </Link>
             <Link
-              to="/collection/all?category=B%C3%A9b%C3%A9%20%26%20Maman"
+              to="/collection/all?category=Bebe%20%26%20Maman"
               onClick={handleNavDrawer}
               className="block text-gray-600 hover:text-black"
             >
               Bebe & Maman
             </Link>
             <Link
-              to="/collection/all?gender=Unisexe"
+              to="/collection/all?category=Unisexe"
               onClick={handleNavDrawer}
               className="block text-gray-600 hover:text-black"
             >
               Unisexe
             </Link>
             <Link
-              to="/collection/all?collection=Soins%20Naturels"
+              to="/collection/all?category=Bio%20%26%20Naturel"
               onClick={handleNavDrawer}
               className="block text-gray-600 hover:text-black"
             >

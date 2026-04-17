@@ -1,13 +1,13 @@
 const express = require("express");
 const Order = require("../models/Order");
-const { protect, admin } = require("../middleware/authMiddleware");
+const { protect, personnel } = require("../middleware/authMiddleware");
 const router = express.Router();
 
 // @route GET /api/admin/orders
 // @desc get All Orders
 // Access Private/admin
 
-router.get("/", protect, admin, async (req, res) => {
+router.get("/", protect, personnel, async (req, res) => {
   try {
     const orders = await Order.find({}).populate("user", "name email");
 
@@ -25,15 +25,29 @@ router.get("/", protect, admin, async (req, res) => {
 // @desc Update order status
 // Access Private/admin
 
-router.put("/:id", protect, admin, async (req, res) => {
+router.put("/:id", protect, personnel, async (req, res) => {
   try {
     const order = await Order.findById(req.params.id).populate("user", "name");
     if (order) {
-      order.status = req.body.status || order.status;
-      order.isDelivered =
-        req.body.status === "Delivered" ? true : order.isDelivered;
+      const allowedStatuses = [
+        "Pending",
+        "Processing",
+        "Shipped",
+        "Delivered",
+        "Cancelled",
+      ];
+      const nextStatus = req.body.status || order.status;
+
+      if (!allowedStatuses.includes(nextStatus)) {
+        return res.status(400).json({ message: "Invalid order status" });
+      }
+
+      order.status = nextStatus;
+      order.isDelivered = nextStatus === "Delivered";
       order.deliveredAt =
-        req.body.status === "Delivered" ? Date.now() : order.deliveredAt;
+        nextStatus === "Delivered"
+          ? order.deliveredAt || Date.now()
+          : undefined;
       const updatedOrder = await order.save();
       res.json(updatedOrder);
     } else {
@@ -49,7 +63,7 @@ router.put("/:id", protect, admin, async (req, res) => {
 // @desc Delete existing Order
 // Access Private/admin
 
-router.delete("/:id", protect, admin, async (req, res) => {
+router.delete("/:id", protect, personnel, async (req, res) => {
   try {
     const order = await Order.findById(req.params.id);
 

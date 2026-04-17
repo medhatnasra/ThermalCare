@@ -3,6 +3,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { fetchAdminProducts } from "../redux/slices/adminProductSlice";
 import { fetchAllOrders } from "../redux/slices/adminOrderSlice";
+import {
+  getOrderStatusBadgeClassName,
+  getOrderStatusLabel,
+  normalizeOrderStatus,
+} from "../utils/orderStatus";
 
 const AdminHomePage = () => {
   const dispatch = useDispatch();
@@ -48,20 +53,16 @@ const AdminHomePage = () => {
 
   const statusDistribution = safeOrders.reduce(
     (acc, order) => {
-      const status = String(order.status || "").toLowerCase();
-      if (status.includes("deliver")) acc.delivered += 1;
-      else if (status.includes("ship")) acc.shipped += 1;
-      else if (status.includes("process") || status.includes("paid")) {
-        acc.processing += 1;
-      } else if (status.includes("cancel") || status.includes("fail")) {
-        acc.cancelled += 1;
-      } else if (status.includes("pend")) acc.pending += 1;
+      const status = normalizeOrderStatus(order.status);
+      if (status === "delivered") acc.delivered += 1;
+      else if (status === "shipped") acc.shipped += 1;
+      else if (status === "pending") acc.pending += 1;
+      else if (status === "cancelled") acc.cancelled += 1;
       else acc.other += 1;
       return acc;
     },
     {
       pending: 0,
-      processing: 0,
       shipped: 0,
       delivered: 0,
       cancelled: 0,
@@ -71,13 +72,8 @@ const AdminHomePage = () => {
 
   const statusSegments = [
     { key: "delivered", color: "#16a34a", value: statusDistribution.delivered },
-    {
-      key: "processing",
-      color: "#f59e0b",
-      value: statusDistribution.processing,
-    },
+    { key: "pending", color: "#f59e0b", value: statusDistribution.pending },
     { key: "shipped", color: "#0ea5e9", value: statusDistribution.shipped },
-    { key: "pending", color: "#6366f1", value: statusDistribution.pending },
     { key: "cancelled", color: "#dc2626", value: statusDistribution.cancelled },
     { key: "other", color: "#64748b", value: statusDistribution.other },
   ];
@@ -118,16 +114,15 @@ const AdminHomePage = () => {
 
   const statusLabels = {
     delivered: "livrees",
-    processing: "en cours",
-    shipped: "expediees",
     pending: "en attente",
+    shipped: "expediees",
     cancelled: "annulees",
     other: "autres",
   };
 
   return (
     <div className="max-w-7xl mx-auto p-6 space-y-6">
-      <div className="rounded-2xl border border-slate-200 bg-gradient-to-r from-slate-900 via-slate-800 to-cyan-800 p-6 text-white shadow-lg">
+      <div className="rounded-2xl border border-slate-200 bg-linear-to-r from-slate-900 via-slate-800 to-cyan-800 p-6 text-white shadow-lg">
         <p className="text-sm uppercase tracking-[0.25em] text-cyan-200">
           Centre de pilotage
         </p>
@@ -157,10 +152,10 @@ const AdminHomePage = () => {
                   Chiffre d'affaires
                 </p>
                 <p className="mt-2 text-4xl font-semibold text-slate-900">
-                  {revenueValue.toFixed(2)} TND
+                  {revenueValue.toFixed(2)} DT
                 </p>
                 <p className="mt-1 text-sm text-slate-500">
-                  Panier moyen : {avgOrderValue.toFixed(2)} TND
+                  Panier moyen : {avgOrderValue.toFixed(2)} DT
                 </p>
               </div>
               <div className="rounded-xl bg-emerald-50 px-3 py-2 text-xs font-semibold text-emerald-700">
@@ -180,7 +175,7 @@ const AdminHomePage = () => {
                   >
                     <div className="w-full rounded-xl bg-slate-100 p-1">
                       <div
-                        className="w-full rounded-lg bg-gradient-to-t from-cyan-500 to-emerald-400 transition-all duration-500"
+                        className="w-full rounded-lg bg-linear-to-t from-cyan-500 to-emerald-400 transition-all duration-500"
                         style={{
                           height: `${Math.max(
                             12,
@@ -216,7 +211,7 @@ const AdminHomePage = () => {
                 className="relative h-36 w-36 rounded-full"
                 style={donutStyle}
               >
-                <div className="absolute inset-[14px] grid place-items-center rounded-full bg-white text-center">
+                <div className="absolute inset-3.5 grid place-items-center rounded-full bg-white text-center">
                   <p className="text-2xl font-semibold text-slate-900">
                     {orderValue}
                   </p>
@@ -289,7 +284,7 @@ const AdminHomePage = () => {
                     </div>
                     <div className="h-2.5 rounded-full bg-slate-200">
                       <div
-                        className="h-full rounded-full bg-gradient-to-r from-cyan-500 to-slate-900"
+                        className="h-full rounded-full bg-linear-to-r from-cyan-500 to-slate-900"
                         style={{
                           width: `${Math.max(
                             8,
@@ -335,14 +330,16 @@ const AdminHomePage = () => {
                       {String(order._id).slice(-10)}
                     </td>
                     <td className="py-4 px-4">
-                      {order.user?.name || "Invite"}
+                      {order.user?.name || "Client supprime"}
                     </td>
                     <td className="py-4 px-4 font-semibold text-slate-900">
-                      {Number(order.totalPrice || 0).toFixed(2)} TND
+                      {Number(order.totalPrice || 0).toFixed(2)} DT
                     </td>
                     <td className="py-4 px-4">
-                      <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-700">
-                        {order.status}
+                      <span
+                        className={`${getOrderStatusBadgeClassName(order.status)} rounded-full px-3 py-1 text-xs font-semibold`}
+                      >
+                        {getOrderStatusLabel(order.status)}
                       </span>
                     </td>
                   </tr>

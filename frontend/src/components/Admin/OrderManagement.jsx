@@ -5,6 +5,12 @@ import {
   fetchAllOrders,
   updateOrderStatus,
 } from "../../redux/slices/adminOrderSlice";
+import {
+  ORDER_STATUS_OPTIONS,
+  getOrderStatusBadgeClassName,
+  getOrderStatusLabel,
+  getOrderStatusSelectValue,
+} from "../../utils/orderStatus";
 
 const OrderManagement = () => {
   const dispatch = useDispatch();
@@ -15,7 +21,7 @@ const OrderManagement = () => {
   const { orders, loading, error } = useSelector((state) => state.adminOrders);
 
   useEffect(() => {
-    if (!user || user.role !== "admin") {
+    if (!user || (user.role !== "admin" && user.role !== "personnel")) {
       navigate("/");
     } else {
       dispatch(fetchAllOrders());
@@ -53,28 +59,28 @@ const OrderManagement = () => {
                     #{order._id}
                   </td>
                   <td className="p-4">{order.user?.name}</td>
-                  <td className="p-4">{order.totalPrice.toFixed(2)} TND</td>
-                  <td>
+                  <td className="p-4">{order.totalPrice.toFixed(2)} DT</td>
+                  <td className="p-4">
+                    <span
+                      className={`${getOrderStatusBadgeClassName(order.status)} rounded-full px-3 py-1 text-xs font-semibold`}
+                    >
+                      {getOrderStatusLabel(order.status)}
+                    </span>
+                  </td>
+                  <td className="p-4">
                     <select
-                      name=""
+                      value={getOrderStatusSelectValue(order.status)}
                       onChange={(e) =>
                         handleStatusChange(order._id, e.target.value)
                       }
                       className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5"
                     >
-                      <option value="Processing">En cours de traitement</option>
-                      <option value="Shipped">Livré</option>
-                      <option value="Delivered">Livré</option>
-                      <option value="Cancelled">Annulé</option>
+                      {ORDER_STATUS_OPTIONS.map((option) => (
+                        <option key={option.value} value={option.value}>
+                          {option.label}
+                        </option>
+                      ))}
                     </select>
-                  </td>
-                  <td className="p-4">
-                    <button
-                      onClick={() => handleStatusChange(order._id, "Delivered")}
-                      className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
-                    >
-                      Marquer comme livré
-                    </button>
                   </td>
                 </tr>
               ))

@@ -8,21 +8,29 @@ const Subscriber = require("../models/Subscriber");
 
 router.post("/subscribe", async (req, res) => {
   const { email } = req.body;
+  const normalizedEmail = String(email || "")
+    .trim()
+    .toLowerCase();
 
-  if (!email) {
-    return res.status(404).json({ message: "Email is required" });
+  if (!normalizedEmail) {
+    return res.status(400).json({ message: "L'email est obligatoire." });
+  }
+
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(normalizedEmail)) {
+    return res.status(400).json({ message: "Email invalide." });
   }
 
   try {
-    let subscriber = await Subscriber.findOne({ email });
+    let subscriber = await Subscriber.findOne({ email: normalizedEmail });
     if (subscriber) {
-      return res.status(400).json({ message: "Already Subscribed" });
+      return res.status(400).json({ message: "Cet email est deja abonne." });
     }
-    await Subscriber.create({ email });
-    res.status(201).json({ message: "Successfully Subscribed to news Letter" });
+    await Subscriber.create({ email: normalizedEmail });
+    res.status(201).json({ message: "Abonnement effectue avec succes." });
   } catch (error) {
     console.error(error.message);
-    res.status(500).json({ message: "Server Error" });
+    res.status(500).json({ message: "Erreur serveur" });
   }
 });
 

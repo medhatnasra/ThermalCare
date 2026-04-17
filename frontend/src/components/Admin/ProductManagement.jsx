@@ -1,6 +1,6 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import {
   deleteProduct,
   fetchAdminProducts,
@@ -8,9 +8,24 @@ import {
 
 const ProductManagement = () => {
   const dispatch = useDispatch();
+  const location = useLocation();
+  const routeBase = location.pathname.startsWith("/personnel")
+    ? "/personnel/products"
+    : "/admin/products";
+  const [searchTerm, setSearchTerm] = useState("");
   const { products, loading, error } = useSelector(
     (state) => state.adminProducts,
   );
+
+  const filteredProducts = useMemo(() => {
+    const query = searchTerm.trim().toLowerCase();
+    if (!query) return products;
+
+    return products.filter((product) => {
+      const key = `${product.name || ""} ${product.sku || ""} ${product.category || ""} ${product.brand || ""}`.toLowerCase();
+      return key.includes(query);
+    });
+  }, [products, searchTerm]);
 
   useEffect(() => {
     dispatch(fetchAdminProducts());
@@ -29,11 +44,20 @@ const ProductManagement = () => {
       <div className="mb-6 flex items-center justify-between">
         <h2 className="text-2xl font-bold">Gestion des produits</h2>
         <Link
-          to="/admin/products/new"
+          to={`${routeBase}/new`}
           className="rounded bg-green-600 px-4 py-2 text-white hover:bg-green-700"
         >
           Ajouter un produit
         </Link>
+      </div>
+      <div className="mb-4">
+        <input
+          type="text"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          placeholder="Rechercher un produit (nom, SKU, categorie, marque)..."
+          className="w-full rounded-lg border border-gray-300 p-2.5 text-sm"
+        />
       </div>
       <div className="overflow-x-auto shadow-md sm:rounded-lg">
         <table className="min-w-full text-left text-gray-500">
@@ -46,8 +70,8 @@ const ProductManagement = () => {
             </tr>
           </thead>
           <tbody>
-            {products.length > 0 ? (
-              products.map((product) => (
+            {filteredProducts.length > 0 ? (
+              filteredProducts.map((product) => (
                 <tr
                   key={product._id}
                   className="border-b hover:bg-gray-50 cursor-pointer"
@@ -55,11 +79,11 @@ const ProductManagement = () => {
                   <td className="p-4 font-medium text-gray-900 whitespace-nowrap">
                     {product.name}
                   </td>
-                  <td className="p-4">{product.price} TND</td>
+                  <td className="p-4">{product.price} DT</td>
                   <td className="p-4">{product.sku}</td>
                   <td className="p-4">
                     <Link
-                      to={`/admin/products/${product._id}/edit`}
+                      to={`${routeBase}/${product._id}/edit`}
                       className="bg-yellow-500 text-white px-2 py-1 rounded mr-2 hover:bg-yellow-600 "
                     >
                       Modifier
@@ -76,7 +100,7 @@ const ProductManagement = () => {
             ) : (
               <tr>
                 <td colSpan={4} className="p-4 text-center text-gray-500">
-                  Aucun produit trouvé.
+                  Aucun produit trouve.
                 </td>
               </tr>
             )}
@@ -88,3 +112,4 @@ const ProductManagement = () => {
 };
 
 export default ProductManagement;
+

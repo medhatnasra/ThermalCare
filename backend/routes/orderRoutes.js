@@ -10,9 +10,10 @@ const router = express.Router();
 
 router.get("/my-orders", protect, async (req, res) => {
   try {
-    const orders = await Order.find({ user: req.user._id }).sort({
-      createdAt: -1,
-    });
+    const orders = await Order.find({
+      user: req.user._id,
+      status: { $ne: "Cancelled" },
+    }).sort({ createdAt: -1 });
     res.json(orders);
   } catch (error) {
     console.error(error.message);
@@ -28,7 +29,7 @@ router.get("/:id", protect, async (req, res) => {
   try {
     const order = await Order.findById(req.params.id).populate(
       "user",
-      "name email"
+      "name email",
     );
 
     if (!order) {

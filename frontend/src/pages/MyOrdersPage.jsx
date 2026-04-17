@@ -3,11 +3,19 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { useNavigate } from "react-router-dom";
 import { fetchUserOrders } from "../redux/slices/orderSlice";
+import {
+  getOrderStatusBadgeClassName,
+  getOrderStatusLabel,
+  normalizeOrderStatus,
+} from "../utils/orderStatus";
 
 const MyOrdersPage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { orders, loading, error } = useSelector((state) => state.orders);
+  const visibleOrders = orders.filter(
+    (order) => normalizeOrderStatus(order.status) !== "cancelled",
+  );
 
   useEffect(() => {
     dispatch(fetchUserOrders());
@@ -27,7 +35,7 @@ const MyOrdersPage = () => {
           <thead className="bg-gray-100 text-xs uppercase text-gray-700">
             <tr>
               <th className="py-2 px-4 sm:py-3">Image</th>
-              <th className="py-2 px-4 sm:py-3">Numéro de commande</th>
+              <th className="py-2 px-4 sm:py-3">Commande</th>
               <th className="py-2 px-4 sm:py-3">Créée</th>
               <th className="py-2 px-4 sm:py-3">Adresse de livraison</th>
               <th className="py-2 px-4 sm:py-3">Articles</th>
@@ -36,10 +44,10 @@ const MyOrdersPage = () => {
             </tr>
           </thead>
           <tbody>
-            {orders.length > 0 ? (
-              orders.map((order, index) => (
+            {visibleOrders.length > 0 ? (
+              visibleOrders.map((order, index) => (
                 <tr
-                  key={index}
+                  key={order._id}
                   className="border-b hover:border-gray-50 cursor-pointer"
                   onClick={() => handleRowClick(order._id)}
                 >
@@ -57,7 +65,7 @@ const MyOrdersPage = () => {
                     )}
                   </td>
                   <td className="py-2 px-2 sm:py-4 sm:px-4 font-medium text-gray-900 whitespace-nowrap ">
-                    #{order._id}
+                    Commande {index + 1}
                   </td>
                   <td className="py-2 px-2 sm:py-4 sm:px-4">
                     {new Date(order.createdAt).toLocaleDateString()}{" "}
@@ -75,17 +83,13 @@ const MyOrdersPage = () => {
                     {order.orderItems.length}
                   </td>
                   <td className="py-2 px-2 sm:py-4 sm:px-4">
-                    {Number(order.totalPrice || 0).toFixed(1)} TND
+                    {Number(order.totalPrice || 0).toFixed(1)} DT
                   </td>
                   <td className="py-2 px-2 sm:py-4 sm:px-4">
                     <span
-                      className={`${
-                        order.isPaid
-                          ? "bg-green-100 text-green-700 "
-                          : "bg-red-100 text-red-700"
-                      } px-2 py-1 rounded-full text-xs sm:text-sm font-medium`}
+                      className={`${getOrderStatusBadgeClassName(order.status)} px-2 py-1 rounded-full text-xs sm:text-sm font-medium`}
                     >
-                      {order.isPaid ? "Payé" : "En attente"}
+                      {getOrderStatusLabel(order.status)}
                     </span>
                   </td>
                 </tr>

@@ -182,10 +182,10 @@ router.get("/", async (req, res) => {
       query.brand = { $in: brand.split(",") };
     }
     if (size) {
-      query.size = { $in: size.split(",") };
+      query.sizes = { $in: size.split(",") };
     }
     if (color) {
-      query.color = { $in: color.split(",") };
+      query.colors = { $in: color.split(",") };
     }
     if (gender) {
       // Include Unisexe products when filtering by Men or Women
@@ -266,6 +266,27 @@ router.get("/new-arrivals", async (req, res) => {
   } catch (error) {
     console.log(error.message);
     res.status(500).send("Server Error");
+  }
+});
+
+// @route GET /api/products/filter-options
+// @desc Get distinct filter options derived from stored products
+// @access Public
+
+router.get("/filter-options", async (req, res) => {
+  try {
+    const [brands, materials] = await Promise.all([
+      Product.distinct("brand", { brand: { $exists: true, $ne: "" } }),
+      Product.distinct("material", { material: { $exists: true, $ne: "" } }),
+    ]);
+
+    res.json({
+      brands: brands.sort((a, b) => a.localeCompare(b)),
+      materials: materials.sort((a, b) => a.localeCompare(b)),
+    });
+  } catch (error) {
+    console.log(error.message);
+    res.status(500).json({ message: "Server Error" });
   }
 });
 

@@ -31,7 +31,7 @@ const Login = () => {
     const normalizedEmail = email.trim().toLowerCase();
 
     if (!normalizedEmail || !password.trim()) {
-      toast.error("Veuillez remplir tous les champs obligatoires.");
+      toast.error("Veuillez remplir tous les champs requis.");
       return;
     }
 
@@ -42,7 +42,7 @@ const Login = () => {
     }
 
     if (password.trim().length < 6) {
-      toast.error("Le mot de passe doit contenir au moins 6 caracteres.");
+      toast.error("Le mot de passe doit contenir au moins 6 caractères.");
       return;
     }
 
@@ -50,10 +50,10 @@ const Login = () => {
       await dispatch(
         loginUser({ email: normalizedEmail, password: password.trim() }),
       ).unwrap();
-      toast.success("Connexion reussie.");
+      toast.success("Connexion réussie.");
     } catch (error) {
       toast.error(
-        error?.message || "Echec de la connexion. Veuillez reessayer.",
+        error?.message || "Échec de la connexion. Veuillez réessayer.",
       );
     }
   };
