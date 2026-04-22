@@ -22,6 +22,14 @@ const OrderConfirmationPage = () => {
     orderDate.setDate(orderDate.getDate() + 3);
     return orderDate.toLocaleDateString();
   };
+
+  const paymentMethodLabel =
+    checkout?.paymentMethod === "OnDelivery"
+      ? "Paiement a la livraison"
+      : checkout?.paymentMethod === "Card"
+        ? "Carte bancaire"
+        : checkout?.paymentMethod || "Non specifie";
+
   return (
     <div className="max-w-4xl mx-auto bg-white">
       <h1 className="text-4xl font-bold text-center text-emerald-700 mb-8">
@@ -74,7 +82,7 @@ const OrderConfirmationPage = () => {
             {/* Informations de paiement  */}
             <div className="">
               <h1 className="text-lg font-semibold mb-2">Paiement</h1>
-              <div className="text-gray-600">Paiement à la livraison</div>
+              <div className="text-gray-600">{paymentMethodLabel}</div>
             </div>
             {/* Informations de livraison  */}
 

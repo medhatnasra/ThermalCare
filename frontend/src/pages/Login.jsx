@@ -7,6 +7,31 @@ import { useDispatch, useSelector } from "react-redux";
 import { mergeCart } from "../redux/slices/cartSlice";
 import { toast } from "sonner";
 
+const toFrenchAuthError = (message) => {
+  const normalized = (message || "").toLowerCase();
+
+  if (normalized.includes("invalid") && normalized.includes("password")) {
+    return "Mot de passe incorrect.";
+  }
+  if (normalized.includes("invalid") && normalized.includes("email")) {
+    return "Adresse e-mail invalide.";
+  }
+  if (normalized.includes("user") && normalized.includes("not")) {
+    return "Utilisateur introuvable.";
+  }
+  if (normalized.includes("already exists")) {
+    return "Ce compte existe deja.";
+  }
+  if (normalized.includes("required")) {
+    return "Veuillez remplir tous les champs requis.";
+  }
+  if (normalized.includes("server")) {
+    return "Erreur serveur. Veuillez reessayer plus tard.";
+  }
+
+  return "Echec de la connexion. Veuillez reessayer.";
+};
+
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -52,9 +77,7 @@ const Login = () => {
       ).unwrap();
       toast.success("Connexion réussie.");
     } catch (error) {
-      toast.error(
-        error?.message || "Échec de la connexion. Veuillez réessayer.",
-      );
+      toast.error(toFrenchAuthError(error?.message));
     }
   };
 
@@ -130,7 +153,7 @@ const Login = () => {
           <img
             src={login}
             alt="login "
-            className="h-[750px] w-full object-cover"
+            className="h-187.5 w-full object-cover"
           />
         </div>
       </div>

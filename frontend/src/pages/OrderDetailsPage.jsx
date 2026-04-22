@@ -20,6 +20,14 @@ const OrderDetailsPage = () => {
   if (loading) return <p>Chargement...</p>;
   if (error) return <p>Erreur : {error}</p>;
 
+  const paymentMethodLabel =
+    orderDetails.paymentMethod === "OnDelivery"
+      ? "Paiement a la livraison"
+      : orderDetails.paymentMethod === "Card"
+        ? "Carte bancaire"
+        : orderDetails.paymentMethod;
+
+
   return (
     <div className="max-w-7xl mx-auto p-4 sm:p-6">
       <h2 className="text-2xl md:text-3xl font-bold mb-6">
@@ -63,9 +71,7 @@ const OrderDetailsPage = () => {
               </h4>
               <p className="">
                 Méthode :{" "}
-                {orderDetails.paymentMethod === "OnDelivery"
-                  ? "Livraison"
-                  : orderDetails.paymentMethod}{" "}
+                {paymentMethodLabel}{" "}
               </p>
               <p>Statut : {orderDetails.isPaid ? "Payé" : "Non payé"}</p>
             </div>

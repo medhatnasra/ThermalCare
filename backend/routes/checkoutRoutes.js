@@ -25,6 +25,12 @@ router.post("/", protect, async (req, res) => {
     return res.status(404).json({ message: "no items in checkout" });
   }
 
+  if (!["OnDelivery", "Card"].includes(paymentMethod)) {
+    return res.status(400).json({
+      message: "Invalid payment method. Use OnDelivery or Card.",
+    });
+  }
+
   try {
     const newCheckout = await Checkout.create({
       user: req.user._id,
@@ -84,7 +90,10 @@ router.post("/:id/finalize", protect, async (req, res) => {
     if (!checkout) {
       return res.status(404).json({ message: "CheckouT Not Found" });
     }
-    if (checkout.isPaid && !checkout.isFinalized) {
+    const isOnDelivery = checkout.paymentMethod === "OnDelivery";
+    const canFinalize = !checkout.isFinalized && (checkout.isPaid || isOnDelivery);
+
+    if (canFinalize) {
       // Create Final Order
       const FinalOrder = await Order.create({
         user: checkout.user,
@@ -92,10 +101,10 @@ router.post("/:id/finalize", protect, async (req, res) => {
         shippingAddress: checkout.shippingAddress,
         paymentMethod: checkout.paymentMethod,
         totalPrice: checkout.totalPrice,
-        isPaid: true,
-        paidAt: checkout.paidAt,
+        isPaid: checkout.isPaid,
+        paidAt: checkout.isPaid ? checkout.paidAt : undefined,
         isDelivered: false,
-        paymentStatus: "paid",
+        paymentStatus: checkout.isPaid ? "paid" : "pending",
         paymentDetails: checkout.paymentDetails,
         status: "Pending",
       });

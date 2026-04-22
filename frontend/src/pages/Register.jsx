@@ -5,6 +5,29 @@ import { registerUser } from "../redux/slices/authSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { mergeCart } from "../redux/slices/cartSlice";
 import { toast } from "sonner";
+
+const toFrenchAuthError = (message) => {
+  const normalized = (message || "").toLowerCase();
+
+  if (normalized.includes("already exists")) {
+    return "Ce compte existe deja.";
+  }
+  if (normalized.includes("invalid") && normalized.includes("email")) {
+    return "Adresse e-mail invalide.";
+  }
+  if (normalized.includes("password") && normalized.includes("short")) {
+    return "Le mot de passe est trop court.";
+  }
+  if (normalized.includes("required")) {
+    return "Veuillez remplir tous les champs requis.";
+  }
+  if (normalized.includes("server")) {
+    return "Erreur serveur. Veuillez reessayer plus tard.";
+  }
+
+  return "Echec de l'inscription. Veuillez reessayer.";
+};
+
 const Register = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -81,9 +104,7 @@ const Register = () => {
       ).unwrap();
       toast.success("Inscription réussie. Bienvenue !");
     } catch (error) {
-      toast.error(
-        error?.message || "Échec de l'inscription. Veuillez réessayer.",
-      );
+      toast.error(toFrenchAuthError(error?.message));
     }
   };
   return (
@@ -168,7 +189,7 @@ const Register = () => {
           <img
             src={register}
             alt="login "
-            className="h-[750px] w-full object-cover"
+            className="h-187.5 w-full object-cover"
           />
         </div>
       </div>

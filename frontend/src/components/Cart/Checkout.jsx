@@ -10,7 +10,14 @@ const Checkout = () => {
 
   const { cart, loading, error } = useSelector((state) => state.cart);
   const { user } = useSelector((state) => state.auth);
-  const [CheckoutId, setCheckoutId] = useState(null);
+  const [paymentMethod, setPaymentMethod] = useState("OnDelivery");
+  const [paymentError, setPaymentError] = useState("");
+  const [cardDetails, setCardDetails] = useState({
+    cardHolder: "",
+    cardNumber: "",
+    expiryDate: "",
+    cvv: "",
+  });
 
   const [shippingAddress, setShippingAddress] = useState({
     firstName: "",
@@ -30,8 +37,59 @@ const Checkout = () => {
     }
   }, [cart, navigate]);
 
+  const validateCardDetails = () => {
+    if (paymentMethod !== "Card") return true;
+
+    const normalizedCardNumber = cardDetails.cardNumber.replace(/\s+/g, "");
+    const expiryRegex = /^(0[1-9]|1[0-2])\/(\d{2})$/;
+    const cvvRegex = /^\d{3}$/;
+
+    if (!cardDetails.cardHolder.trim()) {
+      setPaymentError("Veuillez saisir le nom du titulaire de la carte.");
+      return false;
+    }
+    if (!/^\d{13,19}$/.test(normalizedCardNumber)) {
+      setPaymentError("Le numero de carte est invalide.");
+      return false;
+    }
+    if (!expiryRegex.test(cardDetails.expiryDate.trim())) {
+      setPaymentError("La date d'expiration doit etre au format MM/AA.");
+      return false;
+    }
+
+    const [, monthStr, yearStr] = cardDetails.expiryDate.trim().match(expiryRegex);
+    const month = Number(monthStr);
+    const year = Number(yearStr);
+    const minYear = 26;
+    const now = new Date();
+    const currentYear = now.getFullYear() % 100;
+    const currentMonth = now.getMonth() + 1;
+
+    if (year < minYear) {
+      setPaymentError("L'annee d'expiration doit etre 2026 ou plus.");
+      return false;
+    }
+
+    if (year < currentYear || (year === currentYear && month < currentMonth)) {
+      setPaymentError("La carte est expiree.");
+      return false;
+    }
+
+    if (!cvvRegex.test(cardDetails.cvv.trim())) {
+      setPaymentError("Le code CVV doit contenir exactement 3 chiffres.");
+      return false;
+    }
+
+    setPaymentError("");
+    return true;
+  };
+
   const handleCreateCheckout = async (e) => {
     e.preventDefault();
+    setPaymentError("");
+
+    if (!validateCardDetails()) return;
+
     if (cart && cart.products.length > 0) {
       try {
         // Fetch product details for items missing images
@@ -55,7 +113,7 @@ const Checkout = () => {
 
           return {
             productId: product.productId,
-            name: product.name || "Unnamed Product",
+            name: product.name || "Produit sans nom",
             image: imageUrl || "", // Image URL (required by backend)
             price: Number(product.price) || 0,
             quantity: product.quantity || 1,
@@ -69,37 +127,54 @@ const Checkout = () => {
         // Validate that all items have images
         const missingImages = checkoutItems.filter((item) => !item.image);
         if (missingImages.length > 0) {
-          console.error("Some products are missing images:", missingImages);
+          console.error("Des produits n'ont pas d'image :", missingImages);
           alert(
-            "Some products are missing images. Please refresh and try again.",
+            "Certaines images de produits sont manquantes. Veuillez rafraichir la page et reessayer.",
           );
           return;
         }
-
-        console.log("Checkout Items:", checkoutItems); // Debug log
 
         const res = await dispatch(
           createCheckout({
             checkoutItems,
             shippingAddress,
-            paymentMethod: "OnDelivery",
+            paymentMethod,
             totalPrice: cart.totalPrice,
           }),
         );
-        if (res.payload && res.payload._id) {
-          setCheckoutId(res.payload._id);
+
+        if (!res.payload?._id) {
+          setPaymentError("Impossible de creer la commande. Veuillez reessayer.");
+          return;
         }
+
+        const checkoutId = res.payload._id;
+
+        if (paymentMethod === "Card") {
+          await handlePaymentSuccess(checkoutId);
+          return;
+        }
+
+        await handleFinalizeCheckout(checkoutId);
       } catch (error) {
-        console.error("Error preparing checkout:", error);
+        console.error("Erreur lors de la preparation du checkout :", error);
+        setPaymentError("Une erreur est survenue. Veuillez reessayer.");
       }
     }
   };
 
-  const handPaymentSuccess = async () => {
+  const handlePaymentSuccess = async (checkoutId) => {
     try {
       const response = await axios.put(
-        `http://localhost:5000/api/checkout/${CheckoutId}/pay`,
-        { paymentStatus: "paid" },
+        `http://localhost:5000/api/checkout/${checkoutId}/pay`,
+        {
+          paymentStatus: "paid",
+          paymentDetails: {
+            cardHolder: cardDetails.cardHolder,
+            cardNumberLast4: cardDetails.cardNumber.replace(/\s+/g, "").slice(-4),
+            expiryDate: cardDetails.expiryDate,
+          },
+        },
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("userToken")}`,
@@ -107,17 +182,17 @@ const Checkout = () => {
         },
       );
       if (response.status === 200) {
-        await handleFinalizeCheckout(CheckoutId);
+        await handleFinalizeCheckout(checkoutId);
       }
     } catch (error) {
       console.error("Payment error:", error);
-      alert("Payment failed. Please try again.");
+      setPaymentError("Le paiement par carte a echoue. Veuillez reessayer.");
     }
   };
 
   const handleFinalizeCheckout = async (CheckoutId) => {
     try {
-      const response = await axios.post(
+      await axios.post(
         `http://localhost:5000/api/checkout/${CheckoutId}/finalize`,
         {},
         {
@@ -131,6 +206,14 @@ const Checkout = () => {
       console.log(error);
     }
   };
+
+  const formattedCardNumber = cardDetails.cardNumber
+    .replace(/\D/g, "")
+    .slice(0, 16)
+    .replace(/(.{4})/g, "$1 ")
+    .trim();
+  const cardHolderPreview = cardDetails.cardHolder.trim() || "NOM DU TITULAIRE";
+  const cardExpiryPreview = cardDetails.expiryDate || "MM/AA";
 
   if (loading) return <p>Chargement du panier...</p>;
   if (error) return <p> Erreur : {error}</p>;
@@ -275,22 +358,182 @@ const Checkout = () => {
               required
             />
           </div>
+
+          <h3 className="text-lg mb-3">Paiement</h3>
+          <div className="mb-4 space-y-3">
+            <label
+              className={`flex items-center justify-between gap-2 rounded-lg border p-3 cursor-pointer transition-colors ${
+                paymentMethod === "OnDelivery"
+                  ? "border-black bg-gray-100"
+                  : "border-gray-300 bg-white"
+              }`}
+            >
+              <span className="text-gray-800 font-medium">
+                Paiement a la livraison
+              </span>
+              <input
+                type="radio"
+                name="paymentMethod"
+                value="OnDelivery"
+                checked={paymentMethod === "OnDelivery"}
+                onChange={(e) => {
+                  setPaymentMethod(e.target.value);
+                  setPaymentError("");
+                }}
+              />
+            </label>
+            <label
+              className={`flex items-center justify-between gap-2 rounded-lg border p-3 cursor-pointer transition-colors ${
+                paymentMethod === "Card"
+                  ? "border-black bg-gray-100"
+                  : "border-gray-300 bg-white"
+              }`}
+            >
+              <span className="text-gray-800 font-medium">Payer par carte</span>
+              <input
+                type="radio"
+                name="paymentMethod"
+                value="Card"
+                checked={paymentMethod === "Card"}
+                onChange={(e) => {
+                  setPaymentMethod(e.target.value);
+                  setPaymentError("");
+                }}
+              />
+            </label>
+          </div>
+
+          {paymentMethod === "Card" && (
+            <div className="mb-4 rounded-xl border border-gray-200 p-4 bg-white shadow-sm">
+              <div className="mb-4 flex flex-wrap items-center gap-3">
+                <span className="inline-flex items-center rounded-md border border-blue-100 bg-blue-50 px-3 py-1 text-sm font-bold text-blue-700">
+                  VISA
+                </span>
+                <span className="inline-flex items-center gap-2 rounded-md border border-gray-200 bg-white px-3 py-1 text-sm font-semibold text-gray-800">
+                  <span className="relative inline-flex h-4 w-7 items-center">
+                    <span className="absolute left-0 h-4 w-4 rounded-full bg-red-500" />
+                    <span className="absolute left-2 h-4 w-4 rounded-full bg-yellow-400 opacity-90" />
+                  </span>
+                  Mastercard
+                </span>
+              </div>
+
+              <div className="mb-4 rounded-xl bg-linear-to-br from-slate-900 via-slate-800 to-slate-700 p-4 text-white shadow-lg">
+                <div className="mb-6 flex items-center justify-between">
+                  <span className="inline-flex h-7 w-10 rounded-md bg-yellow-200/80" />
+                  <span className="text-xs uppercase tracking-[0.2em] text-slate-200">
+                    Carte bancaire
+                  </span>
+                </div>
+                <p className="mb-4 text-lg tracking-[0.2em]">
+                  {formattedCardNumber || "0000 0000 0000 0000"}
+                </p>
+                <div className="flex items-end justify-between">
+                  <p className="text-xs uppercase text-slate-300">
+                    {cardHolderPreview}
+                  </p>
+                  <p className="text-sm text-slate-100">{cardExpiryPreview}</p>
+                </div>
+              </div>
+
+              <h4 className="font-semibold mb-3 text-gray-800">
+                Informations de carte
+              </h4>
+              <div className="mb-3">
+                <label className="mb-1 block text-sm font-medium text-gray-700">
+                  Nom du titulaire
+                </label>
+                <input
+                  type="text"
+                  className="w-full rounded-lg border border-gray-300 p-2.5 focus:border-black focus:outline-none"
+                  value={cardDetails.cardHolder}
+                  onChange={(e) =>
+                    setCardDetails((prev) => ({
+                      ...prev,
+                      cardHolder: e.target.value,
+                    }))
+                  }
+                />
+              </div>
+              <div className="mb-3">
+                <label className="mb-1 block text-sm font-medium text-gray-700">
+                  Numero de carte
+                </label>
+                <input
+                  type="text"
+                  className="w-full rounded-lg border border-gray-300 p-2.5 focus:border-black focus:outline-none"
+                  placeholder="1234 5678 9012 3456"
+                  value={cardDetails.cardNumber}
+                  onChange={(e) =>
+                    setCardDetails((prev) => ({
+                      ...prev,
+                      cardNumber: e.target.value
+                        .replace(/\D/g, "")
+                        .slice(0, 16)
+                        .replace(/(.{4})/g, "$1 ")
+                        .trim(),
+                    }))
+                  }
+                />
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="mb-1 block text-sm font-medium text-gray-700">
+                    Expiration (MM/AA)
+                  </label>
+                  <input
+                    type="text"
+                    className="w-full rounded-lg border border-gray-300 p-2.5 focus:border-black focus:outline-none"
+                    placeholder="MM/AA"
+                    value={cardDetails.expiryDate}
+                    onChange={(e) =>
+                      setCardDetails((prev) => {
+                        const rawValue = e.target.value.replace(/\D/g, "").slice(0, 4);
+                        const formattedValue =
+                          rawValue.length > 2
+                            ? `${rawValue.slice(0, 2)}/${rawValue.slice(2)}`
+                            : rawValue;
+                        return {
+                          ...prev,
+                          expiryDate: formattedValue,
+                        };
+                      })
+                    }
+                  />
+                </div>
+                <div>
+                  <label className="mb-1 block text-sm font-medium text-gray-700">
+                    CVV
+                  </label>
+                  <input
+                    type="password"
+                    className="w-full rounded-lg border border-gray-300 p-2.5 focus:border-black focus:outline-none"
+                    placeholder="123"
+                    value={cardDetails.cvv}
+                    inputMode="numeric"
+                    onChange={(e) =>
+                      setCardDetails((prev) => ({
+                        ...prev,
+                        cvv: e.target.value.replace(/\D/g, "").slice(0, 3),
+                      }))
+                    }
+                  />
+                </div>
+              </div>
+            </div>
+          )}
+
+          {paymentError && (
+            <p className="mb-4 text-sm text-red-600">{paymentError}</p>
+          )}
+
           <div className="mt-6">
-            {!CheckoutId ? (
-              <button
-                type="submit"
-                className="w-full bg-black text-white py-3 rounded"
-              >
-                Continuer vers le paiement
-              </button>
-            ) : (
-              <button
-                onClick={() => handPaymentSuccess()}
-                className="w-full bg-black text-white py-3 rounded"
-              >
-                Continuer vers le paiement
-              </button>
-            )}
+            <button
+              type="submit"
+              className="w-full bg-black text-white py-3 rounded"
+            >
+              Confirmer et continuer
+            </button>
           </div>
         </form>
       </div>

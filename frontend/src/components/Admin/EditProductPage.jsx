@@ -43,6 +43,7 @@ const EditProductPage = () => {
   const [productData, setProductData] = useState({
     ...emptyProductData,
   });
+  const [formErrors, setFormErrors] = useState({});
 
   const [uploading, setUploading] = useState(false);
   const routeBase = location.pathname.startsWith("/personnel")
@@ -70,7 +71,41 @@ const EditProductPage = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+
+    if (["price", "discountPrice", "countInStock"].includes(name)) {
+      const numericValue = Number(value);
+      if (value !== "" && numericValue < 0) {
+        setFormErrors((prevErrors) => ({
+          ...prevErrors,
+          [name]: "La valeur ne peut pas etre negative.",
+        }));
+      } else {
+        setFormErrors((prevErrors) => {
+          const nextErrors = { ...prevErrors };
+          delete nextErrors[name];
+          return nextErrors;
+        });
+      }
+    }
+
     setProductData((prevData) => ({ ...prevData, [name]: value }));
+  };
+
+  const validateForm = () => {
+    const errors = {};
+
+    if (Number(productData.price) < 0) {
+      errors.price = "Le prix ne peut pas etre negatif.";
+    }
+    if (Number(productData.discountPrice) < 0) {
+      errors.discountPrice = "Le prix promo ne peut pas etre negatif.";
+    }
+    if (Number(productData.countInStock) < 0) {
+      errors.countInStock = "Le stock ne peut pas etre negatif.";
+    }
+
+    setFormErrors(errors);
+    return Object.keys(errors).length === 0;
   };
   const handleImageUpload = async (e) => {
     const file = e.target.files[0];
@@ -101,6 +136,8 @@ const EditProductPage = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    if (!validateForm()) return;
 
     if (id) {
       dispatch(updateProduct({ id, productData }));
@@ -153,8 +190,12 @@ const EditProductPage = () => {
             value={productData.price}
             onChange={handleChange}
             className="w-full border border-gray-300 rounded-md p-2"
+            min="0"
             required
           />
+          {formErrors.price && (
+            <p className="mt-1 text-sm text-red-600">{formErrors.price}</p>
+          )}
         </div>
 
         <div className="mb-6">
@@ -165,7 +206,11 @@ const EditProductPage = () => {
             value={productData.discountPrice}
             onChange={handleChange}
             className="w-full border border-gray-300 rounded-md p-2"
+            min="0"
           />
+          {formErrors.discountPrice && (
+            <p className="mt-1 text-sm text-red-600">{formErrors.discountPrice}</p>
+          )}
         </div>
         {/* Count In Stock  */}
         <div className="mb-6">
@@ -176,8 +221,12 @@ const EditProductPage = () => {
             value={productData.countInStock}
             onChange={handleChange}
             className="w-full border border-gray-300 rounded-md p-2"
+            min="0"
             required
           />
+          {formErrors.countInStock && (
+            <p className="mt-1 text-sm text-red-600">{formErrors.countInStock}</p>
+          )}
         </div>
 
         {/* SKU  */}
@@ -309,12 +358,21 @@ const EditProductPage = () => {
             ))}
           </div>
         </div>
-        <button
-          className="w-full bg-green-400 text-white py-2 rounded-md hover:bg-green-600 transition-colors"
-          type="submit"
-        >
-          {id ? "Mettre a jour le produit" : "Ajouter le produit"}
-        </button>
+        <div className="mt-8 flex items-center gap-3">
+          <button
+            className="bg-green-500 text-white px-4 py-1.5 text-sm rounded-md hover:bg-green-600 transition-colors"
+            type="submit"
+          >
+            {id ? "Mettre a jour le produit" : "Ajouter le produit"}
+          </button>
+          <button
+            className="bg-gray-200 text-gray-800 px-4 py-1.5 text-sm rounded-md hover:bg-gray-300 transition-colors"
+            type="button"
+            onClick={() => navigate(routeBase)}
+          >
+            Annuler
+          </button>
+        </div>
       </form>
     </div>
   );
