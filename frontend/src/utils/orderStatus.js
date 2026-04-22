@@ -51,6 +51,7 @@ export const getOrderStatusBadgeClassName = (status) =>
 export const getOrderStatusSelectValue = (status) => {
   const normalizedStatus = normalizeOrderStatus(status);
 
+  if (normalizedStatus === "shipped") return "Shipped";
   if (normalizedStatus === "delivered") return "Delivered";
   if (normalizedStatus === "cancelled") return "Cancelled";
   return "Pending";
@@ -58,6 +59,27 @@ export const getOrderStatusSelectValue = (status) => {
 
 export const ORDER_STATUS_OPTIONS = [
   { value: "Pending", label: "En attente" },
+  { value: "Shipped", label: "Expédié" },
   { value: "Delivered", label: "Livré" },
   { value: "Cancelled", label: "Annulé" },
 ];
+
+export const getPaymentMethodLabel = (method) => {
+  const value = String(method || "").toLowerCase();
+
+  if (value.includes("card")) return "Paiement par carte";
+  if (value.includes("cashdesk")) return "Payer par caisse";
+  if (value.includes("delivery")) return "Paiement à la livraison";
+
+  return method || "Non spécifié";
+};
+
+export const getPaymentMethodBadgeClassName = (method) => {
+  const value = String(method || "").toLowerCase();
+
+  if (value.includes("card")) return "bg-violet-100 text-violet-700";
+  if (value.includes("cashdesk")) return "bg-amber-100 text-amber-700";
+  if (value.includes("delivery")) return "bg-emerald-100 text-emerald-700";
+
+  return "bg-slate-100 text-slate-700";
+};

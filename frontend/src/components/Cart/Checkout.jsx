@@ -57,7 +57,9 @@ const Checkout = () => {
       return false;
     }
 
-    const [, monthStr, yearStr] = cardDetails.expiryDate.trim().match(expiryRegex);
+    const [, monthStr, yearStr] = cardDetails.expiryDate
+      .trim()
+      .match(expiryRegex);
     const month = Number(monthStr);
     const year = Number(yearStr);
     const minYear = 26;
@@ -144,7 +146,9 @@ const Checkout = () => {
         );
 
         if (!res.payload?._id) {
-          setPaymentError("Impossible de creer la commande. Veuillez reessayer.");
+          setPaymentError(
+            "Impossible de creer la commande. Veuillez reessayer.",
+          );
           return;
         }
 
@@ -171,7 +175,9 @@ const Checkout = () => {
           paymentStatus: "paid",
           paymentDetails: {
             cardHolder: cardDetails.cardHolder,
-            cardNumberLast4: cardDetails.cardNumber.replace(/\s+/g, "").slice(-4),
+            cardNumberLast4: cardDetails.cardNumber
+              .replace(/\s+/g, "")
+              .slice(-4),
             expiryDate: cardDetails.expiryDate,
           },
         },
@@ -384,6 +390,27 @@ const Checkout = () => {
             </label>
             <label
               className={`flex items-center justify-between gap-2 rounded-lg border p-3 cursor-pointer transition-colors ${
+                paymentMethod === "CashDesk"
+                  ? "border-black bg-gray-100"
+                  : "border-gray-300 bg-white"
+              }`}
+            >
+              <span className="text-gray-800 font-medium">
+                Payer par caisse
+              </span>
+              <input
+                type="radio"
+                name="paymentMethod"
+                value="CashDesk"
+                checked={paymentMethod === "CashDesk"}
+                onChange={(e) => {
+                  setPaymentMethod(e.target.value);
+                  setPaymentError("");
+                }}
+              />
+            </label>
+            <label
+              className={`flex items-center justify-between gap-2 rounded-lg border p-3 cursor-pointer transition-colors ${
                 paymentMethod === "Card"
                   ? "border-black bg-gray-100"
                   : "border-gray-300 bg-white"
@@ -488,7 +515,9 @@ const Checkout = () => {
                     value={cardDetails.expiryDate}
                     onChange={(e) =>
                       setCardDetails((prev) => {
-                        const rawValue = e.target.value.replace(/\D/g, "").slice(0, 4);
+                        const rawValue = e.target.value
+                          .replace(/\D/g, "")
+                          .slice(0, 4);
                         const formattedValue =
                           rawValue.length > 2
                             ? `${rawValue.slice(0, 2)}/${rawValue.slice(2)}`
@@ -593,5 +622,3 @@ const Checkout = () => {
 };
 
 export default Checkout;
-
-

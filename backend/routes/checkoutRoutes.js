@@ -25,9 +25,9 @@ router.post("/", protect, async (req, res) => {
     return res.status(404).json({ message: "no items in checkout" });
   }
 
-  if (!["OnDelivery", "Card"].includes(paymentMethod)) {
+  if (!["OnDelivery", "CashDesk", "Card"].includes(paymentMethod)) {
     return res.status(400).json({
-      message: "Invalid payment method. Use OnDelivery or Card.",
+      message: "Invalid payment method. Use OnDelivery, CashDesk or Card.",
     });
   }
 
@@ -91,7 +91,9 @@ router.post("/:id/finalize", protect, async (req, res) => {
       return res.status(404).json({ message: "CheckouT Not Found" });
     }
     const isOnDelivery = checkout.paymentMethod === "OnDelivery";
-    const canFinalize = !checkout.isFinalized && (checkout.isPaid || isOnDelivery);
+    const isCashDesk = checkout.paymentMethod === "CashDesk";
+    const canFinalize =
+      !checkout.isFinalized && (checkout.isPaid || isOnDelivery || isCashDesk);
 
     if (canFinalize) {
       // Create Final Order

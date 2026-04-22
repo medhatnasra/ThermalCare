@@ -26,9 +26,11 @@ const OrderConfirmationPage = () => {
   const paymentMethodLabel =
     checkout?.paymentMethod === "OnDelivery"
       ? "Paiement a la livraison"
-      : checkout?.paymentMethod === "Card"
-        ? "Carte bancaire"
-        : checkout?.paymentMethod || "Non specifie";
+      : checkout?.paymentMethod === "CashDesk"
+        ? "Payer par caisse"
+        : checkout?.paymentMethod === "Card"
+          ? "Carte bancaire"
+          : checkout?.paymentMethod || "Non specifie";
 
   return (
     <div className="max-w-4xl mx-auto bg-white">

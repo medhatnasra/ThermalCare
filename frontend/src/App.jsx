@@ -5,6 +5,7 @@ import { Toaster } from "sonner";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Profile from "./pages/Profile";
+import ChangePasswordPage from "./pages/ChangePasswordPage";
 import CollectionPage from "./pages/CollectionPage";
 import ProductDetails from "./components/Products/ProductDetails";
 import Checkout from "./components/Cart/Checkout";
@@ -39,6 +40,10 @@ function App() {
             <Route path="login" element={<Login />} />
             <Route path="register" element={<Register />} />
             <Route path="profile" element={<Profile />} />
+            <Route
+              path="profile/modifier-mot-de-passe"
+              element={<ChangePasswordPage />}
+            />
             <Route path="checkout" element={<Checkout />} />
             <Route
               path="order-confirmation"

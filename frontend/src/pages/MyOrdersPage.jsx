@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { useNavigate } from "react-router-dom";
-import { fetchUserOrders } from "../redux/slices/orderSlice";
+import { cancelOrder, fetchUserOrders } from "../redux/slices/orderSlice";
 import {
   getOrderStatusBadgeClassName,
   getOrderStatusLabel,
@@ -23,6 +23,20 @@ const MyOrdersPage = () => {
 
   const handleRowClick = (orderID) => {
     navigate(`/order/${orderID}`);
+  };
+
+  const handleCancelOrder = (event, orderID) => {
+    event.stopPropagation();
+
+    if (
+      window.confirm(
+        "Êtes-vous sûr de vouloir annuler cette commande en attente ?",
+      )
+    ) {
+      dispatch(cancelOrder(orderID)).then(() => {
+        dispatch(fetchUserOrders());
+      });
+    }
   };
 
   if (loading) return <p>Chargement...</p>;
@@ -91,6 +105,15 @@ const MyOrdersPage = () => {
                     >
                       {getOrderStatusLabel(order.status)}
                     </span>
+                    {normalizeOrderStatus(order.status) === "pending" && (
+                      <button
+                        type="button"
+                        onClick={(event) => handleCancelOrder(event, order._id)}
+                        className="ml-3 mt-2 inline-flex rounded-md bg-rose-600 px-3 py-1.5 text-xs font-medium text-white transition hover:bg-rose-700"
+                      >
+                        Annuler
+                      </button>
+                    )}
                   </td>
                 </tr>
               ))

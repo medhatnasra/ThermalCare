@@ -209,7 +209,9 @@ const EditProductPage = () => {
             min="0"
           />
           {formErrors.discountPrice && (
-            <p className="mt-1 text-sm text-red-600">{formErrors.discountPrice}</p>
+            <p className="mt-1 text-sm text-red-600">
+              {formErrors.discountPrice}
+            </p>
           )}
         </div>
         {/* Count In Stock  */}
@@ -225,7 +227,9 @@ const EditProductPage = () => {
             required
           />
           {formErrors.countInStock && (
-            <p className="mt-1 text-sm text-red-600">{formErrors.countInStock}</p>
+            <p className="mt-1 text-sm text-red-600">
+              {formErrors.countInStock}
+            </p>
           )}
         </div>
 

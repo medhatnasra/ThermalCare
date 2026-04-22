@@ -10,6 +10,8 @@ import {
   getOrderStatusBadgeClassName,
   getOrderStatusLabel,
   getOrderStatusSelectValue,
+  getPaymentMethodBadgeClassName,
+  getPaymentMethodLabel,
 } from "../../utils/orderStatus";
 
 const OrderManagement = () => {
@@ -43,6 +45,7 @@ const OrderManagement = () => {
             <tr>
               <th className="py-3 px-4 ">Numéro de commande </th>
               <th className="py-3 px-4 ">Client </th>
+              <th className="py-3 px-4 ">Paiement</th>
               <th className="py-3 px-4 ">Prix total </th>
               <th className="py-3 px-4 ">Statut</th>
               <th className="py-3 px-4 ">Actions</th>
@@ -59,6 +62,13 @@ const OrderManagement = () => {
                     #{order._id}
                   </td>
                   <td className="p-4">{order.user?.name}</td>
+                  <td className="p-4">
+                    <span
+                      className={`${getPaymentMethodBadgeClassName(order.paymentMethod)} rounded-full px-3 py-1 text-xs font-semibold`}
+                    >
+                      {getPaymentMethodLabel(order.paymentMethod)}
+                    </span>
+                  </td>
                   <td className="p-4">{order.totalPrice.toFixed(2)} DT</td>
                   <td className="p-4">
                     <span
@@ -86,7 +96,7 @@ const OrderManagement = () => {
               ))
             ) : (
               <tr>
-                <td colSpan={5} className="p-4 text-center text-gray-500 ">
+                <td colSpan={6} className="p-4 text-center text-gray-500 ">
                   Aucune commande trouvée.
                 </td>
               </tr>

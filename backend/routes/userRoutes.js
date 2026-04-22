@@ -59,7 +59,7 @@ router.post("/register", async (req, res) => {
           },
           token,
         });
-      }
+      },
     );
   } catch (error) {
     console.log(error.message);
@@ -112,7 +112,7 @@ router.post("/login", async (req, res) => {
           },
           token,
         });
-      }
+      },
     );
   } catch (error) {
     console.log(error.message);
@@ -126,6 +126,54 @@ router.post("/login", async (req, res) => {
 
 router.get("/profile", protect, async (req, res) => {
   res.json(req.user);
+});
+
+// @route PUT /api/users/profile/password
+// @desc Change logged-in user's password
+// @access Private
+
+router.put("/profile/password", protect, async (req, res) => {
+  const { currentPassword, newPassword } = req.body;
+
+  if (!currentPassword || !newPassword) {
+    return res.status(400).json({
+      message: "Veuillez remplir tous les champs requis.",
+    });
+  }
+
+  if (newPassword.length < 6) {
+    return res.status(400).json({
+      message: "Le nouveau mot de passe doit contenir au moins 6 caractères.",
+    });
+  }
+
+  try {
+    const user = await User.findById(req.user._id);
+
+    if (!user) {
+      return res.status(404).json({ message: "Utilisateur introuvable." });
+    }
+
+    const isPasswordValid = await bcrypt.compare(
+      currentPassword,
+      user.password,
+    );
+
+    if (!isPasswordValid) {
+      return res.status(400).json({
+        message: "Le mot de passe actuel est incorrect.",
+      });
+    }
+
+    const salt = bcrypt.genSaltSync(10);
+    user.password = await bcrypt.hash(newPassword, salt);
+    await user.save();
+
+    res.json({ message: "Mot de passe modifié avec succès." });
+  } catch (error) {
+    console.log(error.message);
+    res.status(500).json({ message: "Erreur serveur." });
+  }
 });
 
 module.exports = router;
